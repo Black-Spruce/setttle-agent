@@ -27,7 +27,6 @@
       "Find unmatched bank transactions from last month and suggest matches.",
       "Prepare a profit and loss for this quarter."
     ],
-    "brandColor": "#C93126",
     "logo": "./assets/setttle-mark.png",
     "composerIcon": "./assets/setttle-mark.png"
   }
