@@ -1,0 +1,35 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "setttle-agent",
+  "version": "0.1.0",
+  "description": "Help Setttle users review books, reconcile activity, prepare reports, and record confirmed changes.",
+  "author": {
+    "name": "Setttle",
+    "url": "https://setttle.ca"
+  },
+  "homepage": "https://setttle.ca/agents",
+  "license": "MIT",
+  "keywords": ["setttle", "bookkeeping", "accounting", "invoicing", "reconciliation", "reports"],
+  "extensions": {
+    "com.openai": {
+      "displayName": "Setttle",
+      "shortDescription": "Review and manage your books",
+      "longDescription": "Connect Setttle to review your company books, reconcile bank activity, prepare financial reports, and record bookkeeping changes you confirm. Setttle keeps a double-entry ledger for one or more companies in CAD and USD. Recording a payment writes a ledger entry only; Setttle never moves money.",
+      "developerName": "Setttle",
+      "category": "Finance",
+      "capabilities": ["Read", "Write"],
+      "websiteURL": "https://setttle.ca",
+      "supportURL": "https://setttle.ca/contact",
+      "privacyPolicyURL": "https://setttle.ca/legal/privacy",
+      "termsOfServiceURL": "https://setttle.ca/legal/terms",
+      "defaultPrompt": [
+        "Review my Setttle books and tell me what needs attention.",
+        "Find unmatched bank transactions from last month and suggest matches.",
+        "Prepare a profit and loss for this quarter."
+      ],
+      "brandColor": "#C93126",
+      "logo": "./assets/setttle-mark.png",
+      "composerIcon": "./assets/setttle-mark.png"
+    }
+  }
+}

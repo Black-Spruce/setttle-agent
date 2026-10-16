@@ -1,0 +1,18 @@
+{
+  "name": "setttle-agent",
+  "displayName": "Setttle",
+  "version": "0.1.0",
+  "description": "Help Setttle users review books, reconcile activity, prepare reports, and record confirmed changes.",
+  "author": {
+    "name": "Setttle",
+    "url": "https://setttle.ca"
+  },
+  "homepage": "https://setttle.ca/agents",
+  "license": "MIT",
+  "keywords": ["setttle", "bookkeeping", "accounting", "invoicing", "reconciliation", "reports"],
+  "icon": "./assets/setttle-mark.png",
+  "documentationUrl": "https://setttle.ca/agents",
+  "supportUrl": "https://setttle.ca/contact",
+  "privacyPolicyUrl": "https://setttle.ca/legal/privacy",
+  "termsOfServiceUrl": "https://setttle.ca/legal/terms"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "setttle-tools",
+  "owner": {
+    "name": "Setttle"
+  },
+  "metadata": {
+    "description": "Setttle tools for understanding, reviewing, reconciling, and managing company books."
+  },
+  "plugins": [
+    {
+      "name": "setttle-agent",
+      "source": "./",
+      "description": "Help Setttle users review books, reconcile activity, prepare reports, and record confirmed changes.",
+      "version": "0.1.0"
+    }
+  ]
+}

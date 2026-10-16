@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "setttle": {
+      "type": "http",
+      "url": "https://api.setttle.ca/mcp"
+    }
+  }
+}
