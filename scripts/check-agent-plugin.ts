@@ -25,7 +25,12 @@ const NAME = "setttle-agent";
 const MCP_URL = "https://api.setttle.ca/mcp";
 const SKILL_NAME = /^[a-z0-9]+(?:-[a-z0-9]+)*$/u;
 const SEMVER = /^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/u;
-const IMAGE = /\.(?:png|jpe?g|gif|webp|svg)$/iu;
+/**
+ * The Claude directory can't read binary images or fonts as code, so a
+ * manifest or script that names one holds every version for a reviewer.
+ * Icons ship as SVG, which it reads as text.
+ */
+const BINARY_ASSET = /\.(?:png|jpe?g|gif|webp|ico|bmp|tiff?|woff2?|ttf|otf|eot)$/iu;
 
 const errors: string[] = [];
 const check = (ok: unknown, message: string) => {
@@ -48,11 +53,23 @@ const cursorMarket = readJson(".cursor-plugin/marketplace.json");
 const pluginPathExists = (path: unknown) =>
   typeof path === "string" && path.startsWith("./") && existsSync(join(PLUGIN, path));
 
-/** Width and height of a PNG from its IHDR chunk, or null for other files. */
-function pngSize(path: string): { width: number; height: number } | null {
-  const bytes = readFileSync(join(PLUGIN, path));
-  if (bytes.toString("latin1", 1, 4) !== "PNG") return null;
-  return { width: bytes.readUInt32BE(16), height: bytes.readUInt32BE(20) };
+/**
+ * Why an icon path is unusable, or null when it names a square, self-contained
+ * SVG in the plugin. Square is OpenAI's logo rule; scripts, event handlers,
+ * and external references would fail the directories' security scans.
+ */
+function iconProblem(path: unknown): string | null {
+  if (!pluginPathExists(path)) return "must point at a file in the plugin";
+  if (!String(path).endsWith(".svg")) return "must be an SVG";
+  const svg = readFileSync(join(PLUGIN, String(path)), "utf8");
+  const viewBox = svg.match(/<svg\b[^>]*\bviewBox="([^"]+)"/u)?.[1]?.trim().split(/[\s,]+/u);
+  if (!viewBox || viewBox.length !== 4 || viewBox[2] !== viewBox[3]) {
+    return "must have a square viewBox";
+  }
+  if (/<script\b|\son\w+\s*=|(?:xlink:)?href\s*=\s*["'](?!#)/iu.test(svg)) {
+    return "must not contain scripts, event handlers, or external references";
+  }
+  return null;
 }
 
 const isHttpsUrl = (value: unknown) =>
@@ -145,22 +162,19 @@ check(
     prompts.every((p: unknown) => typeof p === "string" && p.length <= 128),
   "OpenAI defaultPrompt must be an array of ≤ 3 prompts of ≤ 128 characters",
 );
-for (const field of ["logo", "composerIcon"]) {
-  const path = codex.interface?.[field];
-  check(pluginPathExists(path), `OpenAI ${field} must point at a file in the plugin`);
-  if (pluginPathExists(path)) {
-    const size = pngSize(path);
-    check(
-      size && size.width === size.height && size.width >= 48,
-      `OpenAI ${field} must be a square PNG of at least 48×48`,
-    );
-  }
+for (const [label, path] of [
+  ["OpenAI logo", codex.interface?.logo],
+  ["OpenAI composerIcon", codex.interface?.composerIcon],
+  ["Claude icon", claude.icon],
+  ["Cursor logo", cursor.logo],
+] as const) {
+  const problem = iconProblem(path);
+  check(!problem, `${label} ${problem}`);
 }
 check(pluginPathExists(codex.skills), ".codex-plugin skills path must exist");
 check(codex.mcpServers === "./.mcp.json", ".codex-plugin must use .mcp.json");
 
 // Claude directory listing.
-check(pluginPathExists(claude.icon), "Claude icon must point at a file in the plugin");
 for (const field of ["documentationUrl", "supportUrl", "privacyPolicyUrl", "termsOfServiceUrl"]) {
   check(isHttpsUrl(claude[field]), `Claude ${field} must be an https URL`);
 }
@@ -177,7 +191,6 @@ check(
   "Cursor manifest paths must point at the package component directories",
 );
 check(cursor.mcpServers?.setttle?.url === MCP_URL, "Cursor manifest must expose the MCP endpoint");
-check(pluginPathExists(cursor.logo), "Cursor logo must point at a file in the plugin");
 
 // Components no store accepts in a public listing, plus file limits.
 for (const banned of ["hooks", "bin", ".app.json", "commands"]) {
@@ -199,10 +212,8 @@ for (const file of files) {
     !/(^|\/)(\.DS_Store|Thumbs\.db|desktop\.ini|__MACOSX)$/u.test(file),
     `remove system file ${file}`,
   );
-  check(
-    IMAGE.test(file) || statSync(join(PLUGIN, file)).size < 256 * 1024,
-    `${file} must be under 256 KiB`,
-  );
+  check(statSync(join(PLUGIN, file)).size < 256 * 1024, `${file} must be under 256 KiB`);
+  check(!BINARY_ASSET.test(file), `${file}: ship images as SVG, not binary files`);
 }
 
 // Agent Skills: name matches its folder, description is present and bounded.

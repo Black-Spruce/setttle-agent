@@ -10,7 +10,7 @@
   "homepage": "https://setttle.ca/agents",
   "license": "MIT",
   "keywords": ["setttle", "bookkeeping", "accounting", "invoicing", "reconciliation", "reports"],
-  "logo": "./assets/setttle-mark.png",
+  "logo": "./assets/setttle-mark.svg",
   "skills": "./skills",
   "rules": "./rules",
   "mcpServers": {

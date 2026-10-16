@@ -10,7 +10,7 @@
   "homepage": "https://setttle.ca/agents",
   "license": "MIT",
   "keywords": ["setttle", "bookkeeping", "accounting", "invoicing", "reconciliation", "reports"],
-  "icon": "./assets/setttle-mark.png",
+  "icon": "./assets/setttle-mark.svg",
   "documentationUrl": "https://setttle.ca/agents",
   "supportUrl": "https://setttle.ca/contact",
   "privacyPolicyUrl": "https://setttle.ca/legal/privacy",
