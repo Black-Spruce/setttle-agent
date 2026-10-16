@@ -62,9 +62,15 @@ function iconProblem(path: unknown): string | null {
   if (!pluginPathExists(path)) return "must point at a file in the plugin";
   if (!String(path).endsWith(".svg")) return "must be an SVG";
   const svg = readFileSync(join(PLUGIN, String(path)), "utf8");
-  const viewBox = svg.match(/<svg\b[^>]*\bviewBox="([^"]+)"/u)?.[1]?.trim().split(/[\s,]+/u);
-  if (!viewBox || viewBox.length !== 4 || viewBox[2] !== viewBox[3]) {
-    return "must have a square viewBox";
+  const svgTag = svg.match(/<svg\b[^>]*>/u)?.[0] ?? "";
+  const width = Number(svgTag.match(/\bwidth="([\d.]+)"/u)?.[1]);
+  const height = Number(svgTag.match(/\bheight="([\d.]+)"/u)?.[1]);
+  const viewBox = svgTag.match(/\bviewBox="([^"]+)"/u)?.[1]?.trim().split(/[\s,]+/u).map(Number);
+  const validDimensions = Number.isFinite(width) && width >= 48 && width === height;
+  const validViewBox = viewBox?.length === 4 && viewBox.every(Number.isFinite) &&
+    viewBox[2] >= 48 && viewBox[2] === viewBox[3];
+  if (!validDimensions && !validViewBox) {
+    return "must have square numeric dimensions or a square viewBox of at least 48 by 48";
   }
   if (/<script\b|\son\w+\s*=|(?:xlink:)?href\s*=\s*["'](?!#)/iu.test(svg)) {
     return "must not contain scripts, event handlers, or external references";
@@ -133,11 +139,34 @@ for (const [market, entry] of [
 
 // OpenAI listing: the root extension and the Codex interface must agree,
 // because the root extension can replace the Codex manifest.
-const openai = portable.extensions?.["com.openai"];
+const openai = portable.extensions?.["com.openai"]?.interface;
 check(
   JSON.stringify(openai) === JSON.stringify(codex.interface),
-  'plugin.json extensions["com.openai"] must equal .codex-plugin interface',
+  'plugin.json extensions["com.openai"].interface must equal .codex-plugin interface',
 );
+for (const field of ["review", "publication"]) {
+  check(
+    JSON.stringify(portable.extensions?.["com.openai"]?.[field]) ===
+      JSON.stringify(codex.extensions?.["com.openai"]?.[field]),
+    `OpenAI ${field} must agree between portable and Codex manifests`,
+  );
+}
+const cases = portable.extensions?.["com.openai"]?.review?.test_cases;
+if (cases) {
+  for (const [kind, minimum] of [["positive", 5], ["negative", 3]] as const) {
+    const entries = cases[kind];
+    check(Array.isArray(entries) && entries.length >= minimum, `OpenAI needs ${minimum} ${kind} cases`);
+    for (const entry of Array.isArray(entries) ? entries : []) {
+      const fields = kind === "positive"
+        ? ["description", "prompt", "tools_triggered", "expected_behavior"]
+        : ["description", "prompt"];
+      for (const field of fields) {
+        check(typeof entry[field] === "string" && entry[field].trim().length > 0,
+          `OpenAI ${kind} case ${field} must be a nonblank string`);
+      }
+    }
+  }
+}
 for (const [field, max] of [
   ["displayName", 30],
   ["shortDescription", 30],

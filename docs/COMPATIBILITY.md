@@ -11,7 +11,7 @@ This repository is one plugin package, at the repository root. It keeps the user
 
 | Surface         | Native entry point           | Extra components in this scaffold                                |
 | --------------- | ---------------------------- | ---------------------------------------------------------------- |
-| Codex / ChatGPT | `.codex-plugin/plugin.json`  | listing `interface`, mirrored in root `extensions["com.openai"]` |
+| Codex / ChatGPT | `plugin.json` | listing `extensions["com.openai"].interface`; `.codex-plugin/plugin.json` supplies a compatibility overlay |
 | Claude          | `.claude-plugin/plugin.json` | directory listing fields (`icon`, support/privacy/terms URLs)    |
 | Cursor          | `.cursor-plugin/plugin.json` | rules and inline MCP                                             |
 
@@ -33,7 +33,7 @@ CI runs all three on every push and pull request. `scripts/check-agent-plugin.ts
 
 ## Why the package has multiple manifests
 
-The root `plugin.json` is the portability floor. Codex and Claude Code still have native manifest locations, and Cursor has a richer native format for rules, commands, agents, hooks, and variables. Keeping those adapters in the same package gives each host its expected entry point without turning this into a developer workflow plugin or duplicating the user-facing skill.
+The root `plugin.json` is the portability floor. Its `extensions["com.openai"]` object supplies OpenAI settings and replaces the entire `.codex-plugin/plugin.json` overlay; those settings are not merged. Portable skills and MCP servers come from `skills/` and `mcp.json`. Claude Code has a native manifest location, and Cursor has a richer native format for rules, commands, agents, hooks, and variables. Keeping those adapters in the same package gives each host its expected entry point without turning this into a developer workflow plugin or duplicating the user-facing skill.
 
 ## Releasing
 

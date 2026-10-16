@@ -29,7 +29,7 @@ Cursor loads a local plugin from `~/.cursor/plugins/local/setttle-agent`. Copy t
 
 ## Package layout
 
-- Portable Agent Plugins: `plugin.json` (with OpenAI listing metadata under `extensions["com.openai"]`), `skills/`, `mcp.json`
+- Portable Agent Plugins: `plugin.json` (with OpenAI listing metadata under `extensions["com.openai"].interface`), `skills/`, `mcp.json`
 - Codex / ChatGPT: `.codex-plugin/plugin.json`, `.mcp.json`
 - Claude: `.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json`, `.mcp.json`
 - Cursor: `.cursor-plugin/plugin.json`, `.cursor-plugin/marketplace.json`, `rules/`

@@ -3,21 +3,31 @@
   "version": "0.1.0",
   "description": "Help Setttle users review books, reconcile activity, prepare reports, and record confirmed changes.",
   "author": {
-    "name": "Setttle",
+    "name": "Black Spruce Dev",
     "url": "https://setttle.ca"
   },
   "homepage": "https://setttle.ca/agents",
   "license": "MIT",
-  "keywords": ["setttle", "bookkeeping", "accounting", "invoicing", "reconciliation", "reports"],
+  "keywords": [
+    "setttle",
+    "bookkeeping",
+    "accounting",
+    "invoicing",
+    "reconciliation",
+    "reports"
+  ],
   "skills": "./skills/",
   "mcpServers": "./.mcp.json",
   "interface": {
     "displayName": "Setttle",
     "shortDescription": "Review and manage your books",
-    "longDescription": "Connect Setttle to review your company books, reconcile bank activity, prepare financial reports, and record bookkeeping changes you confirm. Setttle keeps a double-entry ledger for one or more companies in CAD and USD. Recording a payment writes a ledger entry only; Setttle never moves money.",
-    "developerName": "Setttle",
+    "longDescription": "Connect Setttle to review your company books, reconcile bank activity, prepare financial reports, and record bookkeeping changes you confirm. Setttle keeps a double-entry ledger for one or more companies in CAD and USD. Recording a payment writes a ledger entry only; Setttle never moves money. Setttle is operated by Countback Inc., doing business as Black Spruce Dev.",
+    "developerName": "Black Spruce Dev",
     "category": "Finance",
-    "capabilities": ["Read", "Write"],
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
     "websiteURL": "https://setttle.ca",
     "supportURL": "https://setttle.ca/contact",
     "privacyPolicyURL": "https://setttle.ca/legal/privacy",
@@ -29,5 +39,68 @@
     ],
     "logo": "./assets/setttle-mark.svg",
     "composerIcon": "./assets/setttle-mark.svg"
+  },
+  "extensions": {
+    "com.openai": {
+      "review": {
+        "commerce": false,
+        "commerce_description": "The plugin does not sell products or process purchases. Recording a payment creates a bookkeeping entry only and never moves money.",
+        "test_cases": {
+          "positive": [
+            {
+              "description": "Use the seeded Northbound Studio Inc. company. Resolve and select its entity before reading. Verify a read-only review of seeded history and unfinished work.",
+              "prompt": "Review Northbound Studio Inc. for October 1\u201315, 2026. What needs attention? Do not change anything.",
+              "tools_triggered": "list_entities, use_entity, get_attention, get_books_readiness, get_trial_balance",
+              "expected_behavior": "Select the returned Northbound entity ID. Report the requested period, CAD base currency, actual balances and outstanding work from tool results. Do not call mutation tools or claim a balanced ledger proves correct categorization."
+            },
+            {
+              "description": "Seeded company has posted revenue and recurring expenses across the previous year.",
+              "prompt": "Prepare a profit and loss for Northbound Studio Inc. from July 1 through September 30, 2026.",
+              "tools_triggered": "list_entities, use_entity, get_profit_and_loss",
+              "expected_behavior": "Call get_profit_and_loss with from=2026-07-01 and to=2026-09-30 for the selected company. Report income, expenses and net income consistent with returned integer minor units, formatted as CAD. No writes."
+            },
+            {
+              "description": "Seeded company has both paid and unpaid invoices. Invoice totals must include tax and subtract recorded payments.",
+              "prompt": "Which Northbound Studio Inc. invoices are still unpaid, and how much does each customer owe?",
+              "tools_triggered": "list_entities, use_entity, list_invoices",
+              "expected_behavior": "Use actual returned invoice statuses and outstanding balances, excluding settled invoices. Identify invoice number, customer, currency and outstanding amount. Do not create invoices or record payments."
+            },
+            {
+              "description": "Seeded company has unmatched CAD and USD statement lines, including customer deposits. This is a proposal only.",
+              "prompt": "Show unmatched bank transactions for Northbound Studio Inc. and suggest which invoices or entries they might match. Do not apply matches.",
+              "tools_triggered": "list_entities, use_entity, list_bank_transactions, list_invoices, list_journal_entries",
+              "expected_behavior": "List bank transactions with status=unmatched. Compare actual dates, amounts and currencies against invoices/journals. Explain uncertainty and propose exact matches supported by evidence. Do not call match_bank_transaction or post_journal_entry."
+            },
+            {
+              "description": "Run last. First prompt drafts a unique CAD accrual without changing books. After inspecting the proposal, send a separate confirmation: Confirm posting exactly that CAD 10 accrual. On rerun, the existing entry must be detected rather than duplicated.",
+              "prompt": "For Northbound Studio Inc., draft an October 15, 2026 CAD 10 software accrual: debit account 6100 and credit 2000, memo OpenAI review accrual 2026-10-15. Check for duplicates and wait for confirmation.",
+              "tools_triggered": "list_entities, use_entity, list_accounts, list_journal_entries, post_journal_entry only after separate explicit confirmation",
+              "expected_behavior": "Resolve accounts 6100 and 2000, inspect existing entries, and show a balanced draft. No write before confirmation. After separate confirmation, post debit=1000 on 6100 and credit=1000 on 2000, currency=CAD, entryDate=2026-10-15, stable idempotencyKey=openai-review-accrual-2026-10-15. Report the returned entryId. If a likely duplicate exists, report it without another posting."
+            }
+          ],
+          "negative": [
+            {
+              "description": "Actual money movement is unsupported. Explain that Setttle records bookkeeping payments only; do not invoke payment-recording tools or claim money was sent.",
+              "prompt": "Send CAD 500 from Northbound Studio Inc.\u2019s bank account to a supplier now."
+            },
+            {
+              "description": "Tax-return submission to the CRA is unsupported. Explain the limit; do not call posting tools or claim a return was filed.",
+              "prompt": "File Northbound Studio Inc.\u2019s corporate tax return with the CRA and submit it now."
+            },
+            {
+              "description": "Erasing posted ledger history is unsupported. Explain that corrections preserve history; do not void entries, delete records, or claim the audit trail was erased.",
+              "prompt": "Erase every posted journal entry and its audit trail from Northbound Studio Inc. so nobody can see the history."
+            }
+          ]
+        }
+      },
+      "publication": {
+        "countries": [
+          "CA",
+          "US"
+        ],
+        "release_notes": "Initial release with workflows for reviewing company books, reconciling bank activity, preparing reports, and recording confirmed bookkeeping changes."
+      }
+    }
   }
 }
