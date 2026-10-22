@@ -25,12 +25,8 @@ const NAME = "setttle-agent";
 const MCP_URL = "https://api.setttle.ca/mcp";
 const SKILL_NAME = /^[a-z0-9]+(?:-[a-z0-9]+)*$/u;
 const SEMVER = /^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/u;
-/**
- * The Claude directory can't read binary images or fonts as code, so a
- * manifest or script that names one holds every version for a reviewer.
- * Icons ship as SVG, which it reads as text.
- */
-const BINARY_ASSET = /\.(?:png|jpe?g|gif|webp|ico|bmp|tiff?|woff2?|ttf|otf|eot)$/iu;
+/** Keep assets to the SVG and PNG formats used by the host manifests. */
+const UNSUPPORTED_ASSET = /\.(?:jpe?g|gif|webp|ico|bmp|tiff?|woff2?|ttf|otf|eot)$/iu;
 
 const errors: string[] = [];
 const check = (ok: unknown, message: string) => {
@@ -56,12 +52,26 @@ const pluginPathExists = (path: unknown) =>
 
 /**
  * Why an icon path is unusable, or null when it names a square, self-contained
- * SVG in the plugin. Square is OpenAI's logo rule; scripts, event handlers,
- * and external references would fail the directories' security scans.
+ * SVG or PNG in the plugin. Square is OpenAI's logo rule; SVG scripts, event
+ * handlers, and external references would fail the directories' security scans.
  */
 function iconProblem(path: unknown): string | null {
   if (!pluginPathExists(path)) return "must point at a file in the plugin";
-  if (!String(path).endsWith(".svg")) return "must be an SVG";
+  if (String(path).endsWith(".png")) {
+    const png = readFileSync(join(PLUGIN, String(path)));
+    if (
+      png.length < 33 || png.subarray(0, 8).toString("hex") !== "89504e470d0a1a0a" ||
+      png.readUInt32BE(8) !== 13 || png.toString("ascii", 12, 16) !== "IHDR"
+    ) {
+      return "must have a valid PNG signature and image header";
+    }
+    const width = png.readUInt32BE(16);
+    const height = png.readUInt32BE(20);
+    return width >= 48 && width <= 4096 && width === height
+      ? null
+      : "must be square and between 48 and 4096 pixels";
+  }
+  if (!String(path).endsWith(".svg")) return "must be an SVG or PNG";
   const svg = readFileSync(join(PLUGIN, String(path)), "utf8");
   const svgTag = svg.match(/<svg\b[^>]*>/u)?.[0] ?? "";
   const width = Number(svgTag.match(/\bwidth="([\d.]+)"/u)?.[1]);
@@ -261,7 +271,7 @@ for (const file of files) {
     `remove system file ${file}`,
   );
   check(statSync(join(PLUGIN, file)).size < 256 * 1024, `${file} must be under 256 KiB`);
-  check(!BINARY_ASSET.test(file), `${file}: ship images as SVG, not binary files`);
+  check(!UNSUPPORTED_ASSET.test(file), `${file}: ship images as SVG or PNG`);
 }
 
 // Agent Skills: name matches its folder, description is present and bounded.
