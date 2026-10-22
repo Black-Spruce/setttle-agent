@@ -46,6 +46,7 @@ const nativeMcp = readJson(".mcp.json");
 const codex = readJson(".codex-plugin/plugin.json");
 const claude = readJson(".claude-plugin/plugin.json");
 const cursor = readJson(".cursor-plugin/plugin.json");
+const codexMarket = readJson(".agents/plugins/marketplace.json");
 const claudeMarket = readJson(".claude-plugin/marketplace.json");
 const cursorMarket = readJson(".cursor-plugin/marketplace.json");
 
@@ -136,6 +137,24 @@ for (const [market, entry] of [
   check(entry?.version === portable.version, `${market} entry version differs`);
   check(entry?.source === "./", `${market} entry must use the repository root as its source`);
 }
+
+// Codex uses a native catalog with explicit source and install policies.
+check(codexMarket.name === claudeMarket.name, "Codex and Claude marketplace names must agree");
+check(codexMarket.name === cursorMarket.name, "Codex and Cursor marketplace names must agree");
+check(codexMarket.interface?.displayName === "Setttle", "Codex marketplace display name must be Setttle");
+check(
+  Array.isArray(codexMarket.plugins) && codexMarket.plugins.length === 1,
+  "Codex marketplace must expose exactly one plugin",
+);
+const codexEntry = codexMarket.plugins?.find((entry: Json) => entry.name === NAME);
+check(codexEntry, "Codex marketplace must expose setttle-agent");
+check(
+  codexEntry?.source?.source === "local" && codexEntry.source.path === "./",
+  "Codex marketplace source must be the repository root",
+);
+check(codexEntry?.policy?.installation === "AVAILABLE", "Codex plugin must be available to install");
+check(codexEntry?.policy?.authentication === "ON_INSTALL", "Codex plugin must authenticate on install");
+check(codexEntry?.category === codex.interface?.category, "Codex marketplace category must match the plugin");
 
 // OpenAI listing: the root extension and the Codex interface must agree,
 // because the root extension can replace the Codex manifest.

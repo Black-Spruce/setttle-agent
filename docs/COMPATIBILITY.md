@@ -15,6 +15,8 @@ This repository is one plugin package, at the repository root. It keeps the user
 | Claude          | `.claude-plugin/plugin.json` | directory listing fields (`icon`, support/privacy/terms URLs)    |
 | Cursor          | `.cursor-plugin/plugin.json` | rules and inline MCP                                             |
 
+Codex discovers this repository through `.agents/plugins/marketplace.json`. Its `setttle-tools` marketplace exposes the plugin at `./`, relative to the repository root, with installation available and authentication requested on install. The Claude and Cursor catalogs remain separate so each host receives its native marketplace format.
+
 The shared MCP server is `https://api.setttle.ca/mcp`. The portable config declares Streamable HTTP; Claude/Codex’s compatibility config declares native HTTP; Cursor receives its native remote-server mapping in `.cursor-plugin/plugin.json`. All three point at the same endpoint and rely on OAuth discovery rather than committed credentials.
 
 The host references are [OpenAI’s plugin packaging guide](https://developers.openai.com/plugins/build/plugins), [Claude Code’s plugin guide](https://code.claude.com/docs/en/plugins), and [Cursor’s plugin reference](https://docs.cursor.com/reference/plugins).
@@ -29,7 +31,7 @@ claude plugin validate --strict ./.claude-plugin/plugin.json
 claude plugin validate --strict ./.claude-plugin/marketplace.json
 ```
 
-CI runs all three on every push and pull request. `scripts/check-agent-plugin.ts` enforces the store rules that host validators don't: OpenAI listing limits and required URLs/assets, parity between the root OpenAI extension and the Codex interface, the Claude directory's license/README/icon rules, skill frontmatter, and no hooks, `bin/`, `commands/`, or `.app.json`. The `claude` commands require Claude Code. Cursor validation is performed by loading the package from `~/.cursor/plugins/local` and checking the plugin components after a window reload.
+CI runs all three on every push and pull request. `scripts/check-agent-plugin.ts` checks the Codex marketplace identity, source, install/authentication policies, and category, and enforces the store rules that host validators don't: OpenAI listing limits and required URLs/assets, parity between the root OpenAI extension and the Codex interface, the Claude directory's license/README/icon rules, skill frontmatter, and no hooks, `bin/`, `commands/`, or `.app.json`. The `claude` commands require Claude Code. Cursor validation is performed by loading the package from `~/.cursor/plugins/local` and checking the plugin components after a window reload.
 
 ## Why the package has multiple manifests
 
@@ -37,4 +39,8 @@ The root `plugin.json` is the portability floor. Its `extensions["com.openai"]` 
 
 ## Releasing
 
-Raise `version` in `plugin.json`, all three native manifests, and both marketplace entries together; the check fails if they differ. The Claude directory and OpenAI pick up a new version from this repository independently of Setttle API deploys, so keep the skills in step with the MCP server's tools and behavior.
+Raise `version` in `plugin.json`, all three native manifests, and the Claude and Cursor marketplace entries together; the check fails if they differ. The Codex catalog reads the version from the plugin manifest.
+
+Codex users add this Git repository with `codex plugin marketplace add Black-Spruce/setttle-agent` and install with `codex plugin add setttle-agent@setttle-tools`, or use the desktop plugin browser after adding the marketplace. Refresh the catalog with `codex plugin marketplace upgrade setttle-tools` when new changes are published.
+
+Repository marketplace distribution is separate from OpenAI's reviewed public directory. OpenAI plugin and MCP approval are still pending. Changes to listing metadata or skills require a new ZIP upload to the existing OpenAI submission; pushing this repository does not update that submission. Keep plugin releases in step with the MCP server's tools and behavior, which deploy separately.

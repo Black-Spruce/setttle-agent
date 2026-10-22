@@ -16,6 +16,17 @@ The assistant sends Setttle the tool requests needed to answer you, such as list
 
 ## Install
 
+Codex:
+
+```sh
+codex plugin marketplace add Black-Spruce/setttle-agent
+codex plugin add setttle-agent@setttle-tools
+```
+
+In Codex desktop, you can also install Setttle from the **Setttle** marketplace in the plugin browser after adding the repository. Start a new chat and ask Setttle to review your books, reconcile bank activity, or prepare a report. Sign in to Setttle when prompted.
+
+This repository marketplace is available independently of OpenAI's public plugin directory. The OpenAI plugin and MCP submissions are still awaiting approval.
+
 Claude Code:
 
 ```sh
@@ -30,7 +41,8 @@ Cursor loads a local plugin from `~/.cursor/plugins/local/setttle-agent`. Copy t
 ## Package layout
 
 - Portable Agent Plugins: `plugin.json` (with OpenAI listing metadata under `extensions["com.openai"].interface`), `skills/`, `mcp.json`
-- Codex / ChatGPT: `.codex-plugin/plugin.json`, `.mcp.json`
+- Codex marketplace: `.agents/plugins/marketplace.json`
+- Codex / ChatGPT compatibility: `.codex-plugin/plugin.json`, `.mcp.json`
 - Claude: `.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json`, `.mcp.json`
 - Cursor: `.cursor-plugin/plugin.json`, `.cursor-plugin/marketplace.json`, `rules/`
 
