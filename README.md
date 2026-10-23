@@ -1,10 +1,10 @@
 # Setttle Agent
 
-Setttle Agent connects your AI assistant to your Setttle books. It helps you review company books, reconcile bank activity, prepare financial reports, and record bookkeeping changes after you confirm them. It works with ChatGPT and Codex, Claude, and Cursor.
+Setttle Agent connects your AI assistant to your Setttle books. It helps you review company books, reconcile bank activity, prepare financial reports, get a fiscal year ready for your accountant, and record bookkeeping changes after you confirm them. It works with ChatGPT and Codex, Claude, and Cursor.
 
 ## What it includes
 
-- **Skills**: `setttle-bookkeeping` sets how the assistant handles your books. `review-books`, `reconcile-bank`, `record-transaction`, and `prepare-report` cover the common workflows.
+- **Skills**: `setttle-bookkeeping` sets how the assistant handles your books. `review-books`, `reconcile-bank`, `record-transaction`, `prepare-report`, and `prepare-year-end` cover the common workflows.
 - **MCP server**: one remote server at `https://api.setttle.ca/mcp` over Streamable HTTP.
 - **Cursor rule**: `rules/setttle-bookkeeping.mdc` carries the same guidance for Cursor.
 
@@ -34,7 +34,7 @@ claude plugin marketplace add Black-Spruce/setttle-agent
 claude plugin install setttle-agent@setttle-tools
 ```
 
-Then invoke `/setttle-agent:review-books`, `/setttle-agent:reconcile-bank`, `/setttle-agent:record-transaction`, or `/setttle-agent:prepare-report`, and sign in to Setttle when your assistant asks.
+Then invoke `/setttle-agent:review-books`, `/setttle-agent:reconcile-bank`, `/setttle-agent:record-transaction`, `/setttle-agent:prepare-report`, or `/setttle-agent:prepare-year-end`, and sign in to Setttle when your assistant asks.
 
 Cursor loads a local plugin from `~/.cursor/plugins/local/setttle-agent`. Copy this repository there, reload the window, and confirm the skills, rule, and MCP server appear.
 
@@ -46,7 +46,7 @@ Cursor loads a local plugin from `~/.cursor/plugins/local/setttle-agent`. Copy t
 - Claude: `.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json`, `.mcp.json`
 - Cursor: `.cursor-plugin/plugin.json`, `.cursor-plugin/marketplace.json`, `rules/`
 
-`scripts/` and `.github/` hold the repository's own checks. The plugin never runs them. See [docs/COMPATIBILITY.md](docs/COMPATIBILITY.md) for how each host reads the package.
+`scripts/` and `.github/` hold the repository's own checks, and `contract/` holds a copy of the Setttle MCP tool contract they check against. The plugin never runs them. See [docs/COMPATIBILITY.md](docs/COMPATIBILITY.md) for how each host reads the package.
 
 ## Development
 
