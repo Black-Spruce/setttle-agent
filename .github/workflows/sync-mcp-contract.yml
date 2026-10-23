@@ -108,7 +108,7 @@ jobs:
             echo "## Before merging"
             echo
             echo "- **Do not merge until the Setttle API with these tools is deployed** to \`https://api.setttle.ca/mcp\`. Every push to main reaches the Claude directory, so skills that name tools the server does not have yet would reach users."
-            echo "- **Merging does not release the plugin.** A release still means raising \`version\` in every manifest and marketplace entry, per \`docs/COMPATIBILITY.md\` \"Releasing\", and a new ZIP upload for OpenAI."
+            echo "- **Merging does not release the plugin.** A release still means raising \`version\` in every manifest and marketplace entry with \`bun scripts/bump-version.ts\`, per \`docs/COMPATIBILITY.md\` \"Releasing\", and a new ZIP upload for OpenAI."
             echo "- Pull requests opened by this workflow do not start other workflows. Close and reopen this pull request to run Validate."
           } > "$RUNNER_TEMP/body.md"
 
