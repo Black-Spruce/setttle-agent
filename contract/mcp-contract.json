@@ -819,15 +819,6 @@
             "type": "string",
             "minLength": 1,
             "maxLength": 100
-          },
-          "corporateRoute": {
-            "description": "Required for a corporation: the company pays rent or reimburses, or the owner is a salaried or commission employee claiming on Form T777 with a T2200. Ignored otherwise.",
-            "type": "string",
-            "enum": [
-              "company_pays",
-              "employee_salaried",
-              "employee_commissioned"
-            ]
           }
         },
         "required": [
@@ -4472,6 +4463,218 @@
             ]
           }
         }
+      }
+    },
+    {
+      "name": "update_home_expense_source",
+      "title": "Edit home expense",
+      "description": "Correct a home expense on a draft worksheet. Omit lines to keep its category splits; the amount must still match them.",
+      "access": "write",
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "entryDate": {
+            "type": "string",
+            "format": "date",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+          },
+          "coverageStart": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "coverageEnd": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "amountMinor": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 9007199254740991
+          },
+          "taxMinor": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "currency": {
+            "type": "string",
+            "enum": [
+              "CAD",
+              "USD"
+            ]
+          },
+          "fxRate": {
+            "type": "string",
+            "pattern": "^\\d+(\\.\\d{1,8})?$"
+          },
+          "receiptId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "sourceId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "lines": {
+            "description": "Replacement category splits; omit to keep the current ones.",
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "categoryCode": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 100
+                },
+                "categoryLabel": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200
+                },
+                "categoryId": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "categoryVersion": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 100
+                },
+                "amountMinor": {
+                  "type": "integer",
+                  "exclusiveMinimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "suggestedAllocationMethod": {
+                  "type": "string",
+                  "enum": [
+                    "shared_home",
+                    "direct_workspace",
+                    "manual_percentage",
+                    "exclude",
+                    "accountant_review"
+                  ]
+                },
+                "appliedAllocationMethod": {
+                  "type": "string",
+                  "enum": [
+                    "shared_home",
+                    "direct_workspace",
+                    "manual_percentage",
+                    "exclude",
+                    "accountant_review"
+                  ]
+                },
+                "suppliedPercent": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "pattern": "^\\d+(\\.\\d{1,4})?$"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "capitalReviewStatus": {
+                  "type": "string",
+                  "enum": [
+                    "not_reviewed",
+                    "likely_expense",
+                    "likely_capital",
+                    "accountant_review",
+                    "resolved"
+                  ]
+                },
+                "capitalDecision": {},
+                "capitalAssetId": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "reviewNote": {
+                  "type": "string",
+                  "maxLength": 2000
+                }
+              },
+              "required": [
+                "categoryCode",
+                "categoryLabel",
+                "categoryVersion",
+                "amountMinor",
+                "suggestedAllocationMethod",
+                "appliedAllocationMethod"
+              ]
+            }
+          }
+        },
+        "required": [
+          "entryDate",
+          "description",
+          "amountMinor",
+          "currency",
+          "sourceId"
+        ]
       }
     },
     {
