@@ -27,17 +27,33 @@ MCP is the cross-client tool boundary. This package connects to Setttle’s exis
 
 ```sh
 bun scripts/check-agent-plugin.ts
+bun scripts/check-mcp-contract.ts
 claude plugin validate --strict ./.claude-plugin/plugin.json
 claude plugin validate --strict ./.claude-plugin/marketplace.json
 ```
 
-CI runs all three on every push and pull request. `scripts/check-agent-plugin.ts` checks the Codex marketplace identity, source, install/authentication policies, and category, and enforces the store rules that host validators don't: OpenAI listing limits and required URLs/assets, parity between the root OpenAI extension and the Codex interface, the Claude directory's license/README/icon rules, skill frontmatter, and no hooks, `bin/`, `commands/`, or `.app.json`. The `claude` commands require Claude Code. Cursor validation is performed by loading the package from `~/.cursor/plugins/local` and checking the plugin components after a window reload.
+CI runs all four on every push and pull request. `scripts/check-agent-plugin.ts` checks the Codex marketplace identity, source, install/authentication policies, and category, and enforces the store rules that host validators don't: OpenAI listing limits and required URLs/assets, parity between the root OpenAI extension and the Codex interface, the Claude directory's license/README/icon rules, skill frontmatter, and no hooks, `bin/`, `commands/`, or `.app.json`. The `claude` commands require Claude Code. Cursor validation is performed by loading the package from `~/.cursor/plugins/local` and checking the plugin components after a window reload.
+
+`scripts/check-mcp-contract.ts` compares tool names with the vendored MCP contract (below). It fails when a skill, rule, or OpenAI test case names a tool the contract lacks, or when a read-only skill names a `write` tool, and it warns, without failing, about contract tools no skill names. It reads tool names from backticked snake_case in `skills/` and `rules/` and from the `tools_triggered` lists in the OpenAI review cases. A skill is read-only when its frontmatter carries `metadata` with `setttle-access: read-only`; such a skill describes forbidden changes in words instead of naming write tools.
+
+## MCP contract
+
+The plugin names tools on Setttle's hosted MCP server, which deploys separately from this package. `contract/mcp-contract.json` is a byte-identical copy of Setttle's generated `packages/mcp-tools/contract/mcp-contract.json`: `contractVersion` 1, then every tool sorted by name with its `name`, `title`, `description`, `access` (`read` or `write`), MCP `annotations`, and `inputSchema`. Do not edit it by hand.
+
+`.github/workflows/sync-mcp-contract.yml` keeps the copy current. Setttle sends a `mcp-contract-changed` repository dispatch when its contract changes on main; the workflow also runs daily and on demand. It reads Setttle's file through the GitHub API with the `SETTTLE_CONTRACT_READ_TOKEN` secret, a fine-grained token with contents read access to `Black-Spruce/setttle`, and skips with a notice when the secret is missing. When the file differs, it force-updates branch `sync/mcp-contract` from main and opens or updates one pull request listing the added, removed, and changed tools and the drift check's result. When the file is unchanged it does nothing. Opening the pull request needs "Allow GitHub Actions to create and approve pull requests" enabled in the repository's Actions settings. Pull requests opened with the workflow token do not start other workflows, so close and reopen the sync pull request to run Validate on it.
 
 ## Why the package has multiple manifests
 
 The root `plugin.json` is the portability floor. Its `extensions["com.openai"]` object supplies OpenAI settings and replaces the entire `.codex-plugin/plugin.json` overlay; those settings are not merged. Portable skills and MCP servers come from `skills/` and `mcp.json`. Claude Code has a native manifest location, and Cursor has a richer native format for rules, commands, agents, hooks, and variables. Keeping those adapters in the same package gives each host its expected entry point without turning this into a developer workflow plugin or duplicating the user-facing skill.
 
 ## Releasing
+
+Every push to main reaches the Claude directory through its webhook, so main must only name tools the deployed server has. OpenAI does not pick up pushes; it needs a new ZIP upload. Release a change that depends on new MCP tools in this order:
+
+1. Deploy the Setttle API with the new tools.
+2. Merge the `sync/mcp-contract` pull request. Merging it does not release the plugin.
+3. Merge the skill changes that use the new tools. The drift check fails on them until the contract has the tools, which is the release gate.
+4. Raise the version as below, then upload a new ZIP to the OpenAI submission.
 
 Raise `version` in `plugin.json`, all three native manifests, and the Claude and Cursor marketplace entries together; the check fails if they differ. The Codex catalog reads the version from the plugin manifest.
 
