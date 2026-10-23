@@ -1,0 +1,137 @@
+name: Sync MCP contract
+
+# Keeps contract/mcp-contract.json in step with Setttle's MCP tool contract.
+# When Setttle's copy differs, this opens or updates a pull request on
+# sync/mcp-contract. Merging it does not release the plugin; see
+# docs/COMPATIBILITY.md "Releasing".
+
+on:
+  repository_dispatch:
+    types: [mcp-contract-changed]
+  workflow_dispatch:
+  schedule:
+    - cron: "17 9 * * *"
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: sync-mcp-contract
+  cancel-in-progress: false
+
+env:
+  SOURCE_REPO: Black-Spruce/setttle
+  SOURCE_PATH: packages/mcp-tools/contract/mcp-contract.json
+  TARGET_PATH: contract/mcp-contract.json
+  BRANCH: sync/mcp-contract
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Fetch Setttle's contract
+        id: fetch
+        env:
+          TOKEN: ${{ secrets.SETTTLE_CONTRACT_READ_TOKEN }}
+        run: |
+          if [ -z "$TOKEN" ]; then
+            echo "::notice::SETTTLE_CONTRACT_READ_TOKEN is not set; skipping the contract sync."
+            echo "result=skip" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          status=$(curl -sS -o "$RUNNER_TEMP/mcp-contract.json" -w '%{http_code}' \
+            -H "Authorization: Bearer $TOKEN" \
+            -H "Accept: application/vnd.github.raw+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/$SOURCE_REPO/contents/$SOURCE_PATH?ref=main")
+          if [ "$status" = "404" ]; then
+            echo "::notice::$SOURCE_PATH is not on $SOURCE_REPO main yet; nothing to sync."
+            echo "result=skip" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          if [ "$status" != "200" ]; then
+            echo "::error::Fetching $SOURCE_PATH from $SOURCE_REPO returned HTTP $status."
+            exit 1
+          fi
+          if cmp -s "$RUNNER_TEMP/mcp-contract.json" "$TARGET_PATH"; then
+            echo "::notice::$TARGET_PATH already matches $SOURCE_REPO main."
+            echo "result=unchanged" >> "$GITHUB_OUTPUT"
+          else
+            echo "result=changed" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: oven-sh/setup-bun@v2
+        if: steps.fetch.outputs.result == 'changed'
+
+      - name: Update the sync branch
+        id: branch
+        if: steps.fetch.outputs.result == 'changed'
+        run: |
+          if git fetch origin "$BRANCH" 2>/dev/null &&
+            git show "origin/$BRANCH:$TARGET_PATH" 2>/dev/null | cmp -s - "$RUNNER_TEMP/mcp-contract.json" &&
+            git merge-base --is-ancestor HEAD "origin/$BRANCH"; then
+            echo "::notice::$BRANCH already carries this contract."
+            pushed=false
+          else
+            pushed=true
+          fi
+
+          before="$RUNNER_TEMP/mcp-contract.before.json"
+          cp "$TARGET_PATH" "$before"
+          cp "$RUNNER_TEMP/mcp-contract.json" "$TARGET_PATH"
+
+          {
+            echo "Updates \`$TARGET_PATH\` to match \`$SOURCE_PATH\` on [$SOURCE_REPO](https://github.com/$SOURCE_REPO) main."
+            echo
+            echo "## What changed"
+            echo
+            bun scripts/diff-mcp-contract.ts "$before" "$TARGET_PATH"
+            echo
+            echo "## Drift check"
+            echo
+            if bun scripts/check-mcp-contract.ts > "$RUNNER_TEMP/check.log" 2>&1; then
+              echo "Passes with this contract."
+            else
+              echo "Fails with this contract. Update the skills, rules, or test cases that name these tools before merging."
+            fi
+            echo
+            echo '```'
+            grep -v '^!' "$RUNNER_TEMP/check.log" || true
+            echo '```'
+            echo
+            echo "## Before merging"
+            echo
+            echo "- **Do not merge until the Setttle API with these tools is deployed** to \`https://api.setttle.ca/mcp\`. Every push to main reaches the Claude directory, so skills that name tools the server does not have yet would reach users."
+            echo "- **Merging does not release the plugin.** A release still means raising \`version\` in every manifest and marketplace entry, per \`docs/COMPATIBILITY.md\` \"Releasing\", and a new ZIP upload for OpenAI."
+            echo "- Pull requests opened by this workflow do not start other workflows. Close and reopen this pull request to run Validate."
+          } > "$RUNNER_TEMP/body.md"
+
+          if [ "$pushed" = true ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git checkout -B "$BRANCH"
+            git add "$TARGET_PATH"
+            git commit -m "chore: sync MCP contract from $SOURCE_REPO"
+            git push --force origin "$BRANCH"
+          fi
+
+      - name: Open or update the pull request
+        if: steps.fetch.outputs.result == 'changed'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          number=$(gh pr list --head "$BRANCH" --base main --state open --json number --jq '.[0].number')
+          if [ -n "$number" ]; then
+            gh pr edit "$number" --body-file "$RUNNER_TEMP/body.md"
+            echo "::notice::Updated pull request #$number."
+          else
+            gh pr create --head "$BRANCH" --base main \
+              --title "Sync MCP contract from Setttle" \
+              --body-file "$RUNNER_TEMP/body.md"
+          fi
