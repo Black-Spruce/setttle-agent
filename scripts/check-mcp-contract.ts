@@ -16,8 +16,8 @@
  *   read-only when its frontmatter has `metadata` with
  *   `setttle-access: read-only`; it describes forbidden changes in words.
  * - OpenAI's MCP review: every tool carries the read-only, destructive, and
- *   open-world hints, `access` agrees with `readOnlyHint`, no read tool is
- *   destructive, and the listing's `capabilities` match the contract.
+ *   open-world hints, no `write` tool is marked read-only, no read-only tool
+ *   is destructive, and the listing's `capabilities` match the contract.
  * - Tool and skill descriptions must not rank Setttle over other sources.
  *
  * Contract tools that no skill names are a warning, not a failure.
@@ -133,11 +133,13 @@ for (const tool of contract.tools) {
   const hints = tool.annotations ?? {};
   const absent = HINTS.filter((hint) => typeof hints[hint] !== "boolean");
   if (absent.length > 0) errors.push(`${CONTRACT}: ${tool.name} lacks ${absent.join(", ")}`);
-  if (typeof hints.readOnlyHint === "boolean" && hints.readOnlyHint !== (tool.access === "read")) {
-    errors.push(`${CONTRACT}: ${tool.name} is ${tool.access} but readOnlyHint is ${hints.readOnlyHint}`);
+  // `access` is the consent tier, so a read tool may still change state
+  // (use_entity switches company); a write tool is never read-only.
+  if (tool.access === "write" && hints.readOnlyHint === true) {
+    errors.push(`${CONTRACT}: write tool ${tool.name} is marked read-only`);
   }
-  if (tool.access === "read" && hints.destructiveHint === true) {
-    errors.push(`${CONTRACT}: read tool ${tool.name} is marked destructive`);
+  if (hints.readOnlyHint === true && hints.destructiveHint === true) {
+    errors.push(`${CONTRACT}: read-only tool ${tool.name} is marked destructive`);
   }
   if (RANKING.test(`${tool.title ?? ""} ${tool.description}`)) {
     errors.push(`${CONTRACT}: ${tool.name} ranks Setttle over other sources`);

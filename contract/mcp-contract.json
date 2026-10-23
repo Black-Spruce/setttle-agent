@@ -8,8 +8,9 @@
       "access": "write",
       "annotations": {
         "readOnlyHint": false,
-        "openWorldHint": false,
-        "destructiveHint": true
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -56,8 +57,9 @@
       "access": "write",
       "annotations": {
         "readOnlyHint": false,
-        "openWorldHint": false,
-        "destructiveHint": true
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -81,8 +83,9 @@
       "access": "write",
       "annotations": {
         "readOnlyHint": false,
-        "openWorldHint": false,
-        "destructiveHint": true
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -108,12 +111,13 @@
     {
       "name": "archive_home_worksheet",
       "title": "Archive home-use worksheet",
-      "description": "Archive an exported worksheet while preserving its in-app history.",
+      "description": "Archive a worksheet at any stage while preserving its in-app history; the tax year is then free for a new worksheet.",
       "access": "write",
       "annotations": {
         "readOnlyHint": false,
-        "openWorldHint": false,
-        "destructiveHint": true
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -137,8 +141,9 @@
       "access": "write",
       "annotations": {
         "readOnlyHint": false,
-        "openWorldHint": false,
-        "destructiveHint": true
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -168,8 +173,9 @@
       "access": "write",
       "annotations": {
         "readOnlyHint": false,
-        "openWorldHint": false,
-        "destructiveHint": false
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -285,8 +291,9 @@
       "access": "write",
       "annotations": {
         "readOnlyHint": false,
-        "openWorldHint": false,
-        "destructiveHint": false
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -344,8 +351,9 @@
       "access": "write",
       "annotations": {
         "readOnlyHint": false,
-        "openWorldHint": false,
-        "destructiveHint": false
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -555,8 +563,9 @@
       "access": "write",
       "annotations": {
         "readOnlyHint": false,
-        "openWorldHint": false,
-        "destructiveHint": false
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -666,8 +675,9 @@
       "access": "write",
       "annotations": {
         "readOnlyHint": false,
-        "openWorldHint": false,
-        "destructiveHint": false
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -782,8 +792,9 @@
       "access": "write",
       "annotations": {
         "readOnlyHint": false,
-        "openWorldHint": false,
-        "destructiveHint": false
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -808,6 +819,15 @@
             "type": "string",
             "minLength": 1,
             "maxLength": 100
+          },
+          "corporateRoute": {
+            "description": "Required for a corporation: the company pays rent or reimburses, or the owner is a salaried or commission employee claiming on Form T777 with a T2200. Ignored otherwise.",
+            "type": "string",
+            "enum": [
+              "company_pays",
+              "employee_salaried",
+              "employee_commissioned"
+            ]
           }
         },
         "required": [
@@ -824,8 +844,9 @@
       "access": "write",
       "annotations": {
         "readOnlyHint": false,
-        "openWorldHint": false,
-        "destructiveHint": false
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -935,8 +956,9 @@
       "access": "write",
       "annotations": {
         "readOnlyHint": false,
-        "openWorldHint": false,
-        "destructiveHint": false
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -1003,8 +1025,9 @@
       "access": "write",
       "annotations": {
         "readOnlyHint": false,
-        "openWorldHint": false,
-        "destructiveHint": false
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -1063,8 +1086,9 @@
       "access": "write",
       "annotations": {
         "readOnlyHint": false,
-        "openWorldHint": false,
-        "destructiveHint": false
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -1121,8 +1145,9 @@
       "access": "write",
       "annotations": {
         "readOnlyHint": false,
-        "openWorldHint": false,
-        "destructiveHint": false
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -1351,8 +1376,9 @@
       "access": "write",
       "annotations": {
         "readOnlyHint": false,
-        "openWorldHint": false,
-        "destructiveHint": true
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -1376,8 +1402,9 @@
       "access": "write",
       "annotations": {
         "readOnlyHint": false,
-        "openWorldHint": false,
-        "destructiveHint": true
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -1467,8 +1494,9 @@
       "access": "write",
       "annotations": {
         "readOnlyHint": false,
-        "openWorldHint": false,
-        "destructiveHint": true
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -1495,8 +1523,9 @@
       "access": "read",
       "annotations": {
         "readOnlyHint": true,
-        "openWorldHint": false,
-        "destructiveHint": false
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -1547,11 +1576,12 @@
       "name": "export_home_worksheet",
       "title": "Export home-use worksheet",
       "description": "Mark a ready worksheet as exported; exported snapshots are immutable.",
-      "access": "write",
+      "access": "read",
       "annotations": {
         "readOnlyHint": false,
-        "openWorldHint": false,
-        "destructiveHint": true
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -1575,8 +1605,9 @@
       "access": "read",
       "annotations": {
         "readOnlyHint": true,
-        "openWorldHint": false,
-        "destructiveHint": false
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -1637,8 +1668,9 @@
       "access": "write",
       "annotations": {
         "readOnlyHint": false,
-        "openWorldHint": false,
-        "destructiveHint": false
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -1678,8 +1710,9 @@
       "access": "read",
       "annotations": {
         "readOnlyHint": true,
-        "openWorldHint": false,
-        "destructiveHint": false
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -1694,8 +1727,9 @@
       "access": "read",
       "annotations": {
         "readOnlyHint": true,
-        "openWorldHint": false,
-        "destructiveHint": false
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -1716,8 +1750,9 @@
       "access": "read",
       "annotations": {
         "readOnlyHint": true,
-        "openWorldHint": false,
-        "destructiveHint": false
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -1740,8 +1775,9 @@
       "access": "read",
       "annotations": {
         "readOnlyHint": true,
-        "openWorldHint": false,
-        "destructiveHint": false
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -1756,8 +1792,9 @@
       "access": "read",
       "annotations": {
         "readOnlyHint": true,
-        "openWorldHint": false,
-        "destructiveHint": false
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -1775,14 +1812,32 @@
       }
     },
     {
+      "name": "get_company_profile",
+      "title": "Get company profile",
+      "description": "The company's registration from Settings → Company: legal name, business type (corporation, sole_proprietorship, partnership, or null when not chosen), 9-digit CRA business number, incorporation jurisdiction, date, and corporation number, the fiscal year end, and the CRA program accounts (RT GST/HST, RP payroll, RC corporate income tax, RZ information returns) with their full numbers. Use it for registration details on returns, letters, or the year-end company item.",
+      "access": "read",
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {}
+      }
+    },
+    {
       "name": "get_home_profile",
       "title": "Get home-use profile",
       "description": "Get the entity-scoped home profile and effective-dated area/workspace inputs.",
       "access": "read",
       "annotations": {
         "readOnlyHint": true,
-        "openWorldHint": false,
-        "destructiveHint": false
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -1797,8 +1852,9 @@
       "access": "read",
       "annotations": {
         "readOnlyHint": true,
-        "openWorldHint": false,
-        "destructiveHint": false
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -1822,8 +1878,9 @@
       "access": "read",
       "annotations": {
         "readOnlyHint": true,
-        "openWorldHint": false,
-        "destructiveHint": false
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -1854,8 +1911,9 @@
       "access": "read",
       "annotations": {
         "readOnlyHint": true,
-        "openWorldHint": false,
-        "destructiveHint": false
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -1879,8 +1937,9 @@
       "access": "read",
       "annotations": {
         "readOnlyHint": true,
-        "openWorldHint": false,
-        "destructiveHint": false
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -1904,8 +1963,9 @@
       "access": "read",
       "annotations": {
         "readOnlyHint": true,
-        "openWorldHint": false,
-        "destructiveHint": false
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -1935,8 +1995,9 @@
       "access": "read",
       "annotations": {
         "readOnlyHint": true,
-        "openWorldHint": false,
-        "destructiveHint": false
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -1959,8 +2020,9 @@
       "access": "read",
       "annotations": {
         "readOnlyHint": true,
-        "openWorldHint": false,
-        "destructiveHint": false
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -1981,8 +2043,9 @@
       "access": "read",
       "annotations": {
         "readOnlyHint": true,
-        "openWorldHint": false,
-        "destructiveHint": false
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -2006,8 +2069,9 @@
       "access": "read",
       "annotations": {
         "readOnlyHint": true,
-        "openWorldHint": false,
-        "destructiveHint": false
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -2025,14 +2089,39 @@
       }
     },
     {
+      "name": "get_year_end",
+      "title": "Get year-end checklist",
+      "description": "One fiscal year's year-end checklist, derived from the books and the owner's decisions. Every item has its key, section, kind (automatic: decided from the books; confirm: the owner confirms; document: done once a file is attached), state (done, not_applicable, open), settledBy (setttle or owner), facts, detail rows, the owner's note, whether it is optional, which decisions set_year_end_item accepts, and the titles of attached files. Also returns the open count, readyToSignOff, who signed the year off and when, the journal lock date, and filing: the return the year supports (a T2 for a corporation, T2125 for a sole proprietor or partners) with its general due dates, or null until the business type is set. The checklist follows the business type. An automatic item that is open is fixed in the books (reconcile, match, post drafts), not by a decision. Omit fiscalYearEnd for the year the Year end page opens by default.",
+      "access": "read",
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "fiscalYearEnd": {
+            "type": "string",
+            "format": "date",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+            "description": "The fiscal year end (YYYY-MM-DD), as listed by list_year_ends."
+          }
+        }
+      }
+    },
+    {
       "name": "latest_fx_rate",
       "title": "Latest FX rate",
       "description": "Return the Bank of Canada daily USD/CAD rate stored in Setttle, on or before a date (default today). rate means 1 quote = rate base, where quote is the non-base currency; convert in exactly that direction. For a historical transaction, pass its transaction or journal date as onOrBefore. available:false means Setttle has no stored rate for that date. A bank transaction's own rate, when it has one, is the rate it actually settled at.",
       "access": "read",
       "annotations": {
         "readOnlyHint": true,
-        "openWorldHint": false,
-        "destructiveHint": false
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -2060,8 +2149,9 @@
       "access": "read",
       "annotations": {
         "readOnlyHint": true,
-        "openWorldHint": false,
-        "destructiveHint": false
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -2076,8 +2166,9 @@
       "access": "read",
       "annotations": {
         "readOnlyHint": true,
-        "openWorldHint": false,
-        "destructiveHint": false
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -2155,8 +2246,9 @@
       "access": "read",
       "annotations": {
         "readOnlyHint": true,
-        "openWorldHint": false,
-        "destructiveHint": false
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -2236,8 +2328,9 @@
       "access": "read",
       "annotations": {
         "readOnlyHint": true,
-        "openWorldHint": false,
-        "destructiveHint": false
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -2252,8 +2345,9 @@
       "access": "read",
       "annotations": {
         "readOnlyHint": true,
-        "openWorldHint": false,
-        "destructiveHint": false
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -2279,8 +2373,9 @@
       "access": "read",
       "annotations": {
         "readOnlyHint": true,
-        "openWorldHint": false,
-        "destructiveHint": false
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -2301,8 +2396,9 @@
       "access": "read",
       "annotations": {
         "readOnlyHint": true,
-        "openWorldHint": false,
-        "destructiveHint": false
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -2326,8 +2422,9 @@
       "access": "read",
       "annotations": {
         "readOnlyHint": true,
-        "openWorldHint": false,
-        "destructiveHint": false
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -2353,8 +2450,9 @@
       "access": "read",
       "annotations": {
         "readOnlyHint": true,
-        "openWorldHint": false,
-        "destructiveHint": false
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -2430,8 +2528,9 @@
       "access": "read",
       "annotations": {
         "readOnlyHint": true,
-        "openWorldHint": false,
-        "destructiveHint": false
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -2523,8 +2622,9 @@
       "access": "read",
       "annotations": {
         "readOnlyHint": true,
-        "openWorldHint": false,
-        "destructiveHint": false
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -2611,8 +2711,9 @@
       "access": "read",
       "annotations": {
         "readOnlyHint": true,
-        "openWorldHint": false,
-        "destructiveHint": false
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -2689,8 +2790,9 @@
       "access": "read",
       "annotations": {
         "readOnlyHint": true,
-        "openWorldHint": false,
-        "destructiveHint": false
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -2709,8 +2811,9 @@
       "access": "read",
       "annotations": {
         "readOnlyHint": true,
-        "openWorldHint": false,
-        "destructiveHint": false
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -2755,8 +2858,9 @@
       "access": "read",
       "annotations": {
         "readOnlyHint": true,
-        "openWorldHint": false,
-        "destructiveHint": false
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -2788,8 +2892,9 @@
       "access": "read",
       "annotations": {
         "readOnlyHint": true,
-        "openWorldHint": false,
-        "destructiveHint": false
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -2873,8 +2978,9 @@
       "access": "read",
       "annotations": {
         "readOnlyHint": true,
-        "openWorldHint": false,
-        "destructiveHint": false
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -2896,14 +3002,32 @@
       }
     },
     {
+      "name": "list_year_ends",
+      "title": "List year ends",
+      "description": "The company's fiscal years, newest first: each year's period (start and end), whether it is open or signed off, and which year the Year end page opens by default. journalLockDate is the latest signed-off year end; journal entries on or before it are locked. Use it to find the fiscalYearEnd for get_year_end.",
+      "access": "read",
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {}
+      }
+    },
+    {
       "name": "match_bank_transaction",
       "title": "Match bank transaction",
       "description": "Match unmatched bank transactions to existing journal entries (their line on the bank account's cash account), like the Inbox's match and combine actions. Pass txnId with entryId for one-to-one; txnId with entryIds when several entries together make up one transaction (their cash lines must add up to it); or txnIds with entryId when several transactions on one account settle one entry. Rejects already matched transactions and entries that don't touch the bank account. Prefer this over posting a new entry: if a bank transaction exists for a cash movement, matching is the correct bookkeeping — a new entry would double-book it. get_bank_transaction lists suggested entries.",
       "access": "write",
       "annotations": {
         "readOnlyHint": false,
-        "openWorldHint": false,
-        "destructiveHint": true
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -2945,8 +3069,9 @@
       "access": "write",
       "annotations": {
         "readOnlyHint": false,
-        "openWorldHint": false,
-        "destructiveHint": true
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -3013,8 +3138,9 @@
       "access": "write",
       "annotations": {
         "readOnlyHint": false,
-        "openWorldHint": false,
-        "destructiveHint": true
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -3083,8 +3209,9 @@
       "access": "write",
       "annotations": {
         "readOnlyHint": false,
-        "openWorldHint": false,
-        "destructiveHint": true
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -3148,8 +3275,9 @@
       "access": "write",
       "annotations": {
         "readOnlyHint": false,
-        "openWorldHint": false,
-        "destructiveHint": true
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -3173,8 +3301,9 @@
       "access": "write",
       "annotations": {
         "readOnlyHint": false,
-        "openWorldHint": false,
-        "destructiveHint": false
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -3257,8 +3386,9 @@
       "access": "write",
       "annotations": {
         "readOnlyHint": false,
-        "openWorldHint": false,
-        "destructiveHint": true
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -3307,8 +3437,9 @@
       "access": "write",
       "annotations": {
         "readOnlyHint": false,
-        "openWorldHint": false,
-        "destructiveHint": true
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -3336,8 +3467,9 @@
       "access": "write",
       "annotations": {
         "readOnlyHint": false,
-        "openWorldHint": false,
-        "destructiveHint": true
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -3365,8 +3497,9 @@
       "access": "write",
       "annotations": {
         "readOnlyHint": false,
-        "openWorldHint": false,
-        "destructiveHint": false
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -3450,8 +3583,9 @@
       "access": "write",
       "annotations": {
         "readOnlyHint": false,
-        "openWorldHint": false,
-        "destructiveHint": false
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -3550,8 +3684,9 @@
       "access": "read",
       "annotations": {
         "readOnlyHint": true,
-        "openWorldHint": false,
-        "destructiveHint": false
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -3577,8 +3712,9 @@
       "access": "write",
       "annotations": {
         "readOnlyHint": false,
-        "openWorldHint": false,
-        "destructiveHint": true
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -3613,8 +3749,9 @@
       "access": "write",
       "annotations": {
         "readOnlyHint": false,
-        "openWorldHint": false,
-        "destructiveHint": true
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -3718,8 +3855,9 @@
       "access": "write",
       "annotations": {
         "readOnlyHint": false,
-        "openWorldHint": false,
-        "destructiveHint": true
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -3743,8 +3881,9 @@
       "access": "write",
       "annotations": {
         "readOnlyHint": false,
-        "openWorldHint": false,
-        "destructiveHint": true
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -3880,8 +4019,9 @@
       "access": "write",
       "annotations": {
         "readOnlyHint": false,
-        "openWorldHint": false,
-        "destructiveHint": true
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -3904,14 +4044,192 @@
       }
     },
     {
+      "name": "set_program_account",
+      "title": "Set CRA program account",
+      "description": "Add a CRA program account under the business number, or edit one by passing its id from get_company_profile. program is RT (GST/HST), RP (payroll), RC (corporate income tax, corporations only), or RZ (information returns); reference is its 4 digits, like 0001. Only RT keeps a filing frequency. The business number must be on file first. When editing, omitted effectiveDate and filingFrequency keep their current value. Confirm changes with the user first. Returns the updated profile.",
+      "access": "write",
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "description": "The program account to edit; omit to add one.",
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "program": {
+            "type": "string",
+            "enum": [
+              "RT",
+              "RP",
+              "RC",
+              "RZ"
+            ]
+          },
+          "reference": {
+            "type": "string",
+            "description": "The 4-digit reference, like 0001."
+          },
+          "effectiveDate": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "filingFrequency": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "monthly",
+                  "quarterly",
+                  "annual"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "program",
+          "reference"
+        ]
+      }
+    },
+    {
+      "name": "set_year_end_item",
+      "title": "Set year-end item",
+      "description": "Record the owner's decision on one year-end checklist item: status 'done' or 'not_applicable', with an optional note, or null to clear the decision. The same rules as the Year end page apply: only choices the item offers (canConfirm, canMarkNotApplicable from get_year_end), never on an item Setttle settles from the books, never on a signed-off year. Only call it after the user has confirmed the decision. Signing off, reopening, sharing, and attaching files are done by the owner in the web app. Returns the updated checklist.",
+      "access": "write",
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "fiscalYearEnd": {
+            "type": "string",
+            "format": "date",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+            "description": "The fiscal year end (YYYY-MM-DD), as listed by list_year_ends."
+          },
+          "itemKey": {
+            "type": "string",
+            "enum": [
+              "company_details",
+              "fiscal_period",
+              "bank_reconciled",
+              "bank_activity",
+              "drafts",
+              "receivables",
+              "payables",
+              "personal_expenses",
+              "inventory",
+              "sales_tax",
+              "fx_revalued",
+              "assets",
+              "mileage",
+              "home_use",
+              "loans_leases",
+              "other"
+            ]
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "done",
+                  "not_applicable"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 1000
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "fiscalYearEnd",
+          "itemKey",
+          "status"
+        ]
+      }
+    },
+    {
+      "name": "set_year_end_period_start",
+      "title": "Set fiscal period start",
+      "description": "Move the start date of an open fiscal year, for example a first year that starts at incorporation rather than a full year before the year end. The start must be on or before the year end and within 53 weeks of it. Signed-off years can't be changed. Returns the updated checklist, whose facts follow the new period.",
+      "access": "write",
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "fiscalYearEnd": {
+            "type": "string",
+            "format": "date",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+            "description": "The fiscal year end (YYYY-MM-DD), as listed by list_year_ends."
+          },
+          "periodStart": {
+            "type": "string",
+            "format": "date",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+            "description": "The new first day of the fiscal year (YYYY-MM-DD)."
+          }
+        },
+        "required": [
+          "fiscalYearEnd",
+          "periodStart"
+        ]
+      }
+    },
+    {
       "name": "undo_bank_post",
       "title": "Undo bank post",
       "description": "Reverse a post_bank_transaction or split, like the Inbox's Undo: the entry is voided as of its own date and the transaction returns to review. For a transfer, both sides return. Refuses an entry that was edited, matched to other work, or used by a bill, invoice or payout.",
       "access": "write",
       "annotations": {
         "readOnlyHint": false,
-        "openWorldHint": false,
-        "destructiveHint": true
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -3934,8 +4252,9 @@
       "access": "write",
       "annotations": {
         "readOnlyHint": false,
-        "openWorldHint": false,
-        "destructiveHint": true
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -3958,8 +4277,9 @@
       "access": "write",
       "annotations": {
         "readOnlyHint": false,
-        "openWorldHint": false,
-        "destructiveHint": true
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -4051,14 +4371,119 @@
       }
     },
     {
+      "name": "update_company_profile",
+      "title": "Update company profile",
+      "description": "Edit the company's registration fields. Omitted fields keep their current value; null clears one. Same checks as Settings → Company: the business number must be 9 digits (a pasted program account number like '123456789 RT 0001' keeps its first 9), the incorporation date can't be in the future, and jurisdiction, incorporation date, and corporation number apply only to corporations (or a business type not yet chosen) and are cleared otherwise. A business with an RC account must stay a corporation. A new incorporation date moves open year-end periods that still start at the old default. Confirm changes with the user first. Returns the updated profile.",
+      "access": "write",
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "entityKind": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "corporation",
+                  "sole_proprietorship",
+                  "partnership"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "legalName": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "businessNumber": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 30
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "jurisdiction": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "CA",
+                  "AB",
+                  "BC",
+                  "MB",
+                  "NB",
+                  "NL",
+                  "NS",
+                  "NT",
+                  "NU",
+                  "ON",
+                  "PE",
+                  "QC",
+                  "SK",
+                  "YT"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "incorporationDate": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "corporationNumber": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 50
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
       "name": "update_mileage",
       "title": "Update mileage entry",
       "description": "Edit an open mileage entry. Material field changes write a revision snapshot; archived entries cannot be edited.",
       "access": "write",
       "annotations": {
         "readOnlyHint": false,
-        "openWorldHint": false,
-        "destructiveHint": true
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -4131,8 +4556,9 @@
       "access": "write",
       "annotations": {
         "readOnlyHint": false,
-        "openWorldHint": false,
-        "destructiveHint": true
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -4197,8 +4623,9 @@
       "access": "write",
       "annotations": {
         "readOnlyHint": false,
-        "openWorldHint": false,
-        "destructiveHint": true
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -4430,11 +4857,12 @@
       "name": "use_entity",
       "title": "Switch entity (company)",
       "description": "Switch the connection to another company. Only accept entity ids from list_entities — do not guess. After switching, all subsequent tool calls report on the new entity. The switch persists for the connection.",
-      "access": "write",
+      "access": "read",
       "annotations": {
         "readOnlyHint": false,
-        "openWorldHint": false,
-        "destructiveHint": false
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -4458,8 +4886,9 @@
       "access": "write",
       "annotations": {
         "readOnlyHint": false,
-        "openWorldHint": false,
-        "destructiveHint": true
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -4483,8 +4912,9 @@
       "access": "write",
       "annotations": {
         "readOnlyHint": false,
-        "openWorldHint": false,
-        "destructiveHint": true
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": false
       },
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",

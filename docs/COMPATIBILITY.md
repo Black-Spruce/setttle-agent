@@ -38,7 +38,7 @@ CI runs all four on every push and pull request. `scripts/check-agent-plugin.ts`
 
 - **Tool names.** Skills (read by Claude, Codex/ChatGPT, and Cursor) and Cursor rules may only name contract tools, as backticked snake_case. Every string in the host manifests may only name contract tools, as bare snake_case; this covers the OpenAI review cases' `tools_triggered` lists and expected behavior.
 - **Read-only skills.** A skill whose frontmatter carries `metadata` with `setttle-access: read-only` may not name a `write` tool; it describes forbidden changes in words instead.
-- **OpenAI's MCP review.** Every contract tool carries `readOnlyHint`, `destructiveHint`, and `openWorldHint`; `access` agrees with `readOnlyHint`; no read tool is destructive; and the OpenAI listing's `capabilities` include `Read` and `Write` exactly when the contract has read and write tools.
+- **OpenAI's MCP review.** Every contract tool carries `readOnlyHint`, `destructiveHint`, and `openWorldHint`; no `write` tool is marked read-only, and no read-only tool is marked destructive (`access` is the consent tier, so a `read` tool such as `use_entity` may still change state); and the OpenAI listing's `capabilities` include `Read` and `Write` exactly when the contract has read and write tools.
 - **Neutral descriptions.** Tool titles and descriptions and skill descriptions must not rank Setttle over other sources ("authoritative", "source of truth", and similar), which OpenAI's scan flags.
 
 It warns, without failing, about contract tools no skill names.
