@@ -1,6 +1,6 @@
 {
   "name": "setttle-agent",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Help Setttle users review books, reconcile activity, prepare reports, and record confirmed changes.",
   "author": {
     "name": "Black Spruce Dev",
@@ -99,7 +99,7 @@
           "CA",
           "US"
         ],
-        "release_notes": "Initial release with workflows for reviewing company books, reconciling bank activity, preparing reports, and recording confirmed bookkeeping changes."
+        "release_notes": "Adds a year-end workflow: review a fiscal year's checklist and company details, and, after confirmation, update checklist items, the first year's start date, and company registration details. Skills now note when a signed-off year locks the journal."
       }
     }
   }
