@@ -16,6 +16,8 @@ jobs:
       - uses: oven-sh/setup-bun@v2
       - name: Store submission rules
         run: bun scripts/check-agent-plugin.ts
+      - name: MCP contract drift
+        run: bun scripts/check-mcp-contract.ts
       - name: Claude plugin and marketplace manifests
         run: |
           bunx @anthropic-ai/claude-code@2.1.292 plugin validate --strict ./.claude-plugin/plugin.json
