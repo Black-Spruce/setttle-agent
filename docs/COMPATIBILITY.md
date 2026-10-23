@@ -60,10 +60,12 @@ Every push to main reaches the Claude directory through its webhook, so main mus
 1. Deploy the Setttle API with the new tools.
 2. Merge the `sync/mcp-contract` pull request. Merging it does not release the plugin.
 3. Merge the skill changes that use the new tools. The drift check fails on them until the contract has the tools, which is the release gate.
-4. Raise the version with `bun scripts/bump-version.ts <major|minor|patch|x.y.z>`, then upload a new ZIP to the OpenAI submission.
+4. Raise the version with `bun scripts/bump-version.ts <major|minor|patch|x.y.z>`, then build the OpenAI ZIP with `bun scripts/build-openai-zip.ts` and upload it to the OpenAI submission.
 
 Raise `version` in `plugin.json`, all three native manifests, and the Claude and Cursor marketplace entries together; the check fails if they differ. `bun scripts/bump-version.ts` does this in one step: it takes `major`, `minor`, `patch`, or an exact version, refuses to write anything if the files already disagree, and keeps each file's formatting. The Codex catalog reads the version from the plugin manifest.
 
 Codex users add this Git repository with `codex plugin marketplace add Black-Spruce/setttle-agent` and install with `codex plugin add setttle-agent@setttle-tools`, or use the desktop plugin browser after adding the marketplace. Refresh the catalog with `codex plugin marketplace upgrade setttle-tools` when new changes are published.
 
-Repository marketplace distribution is separate from OpenAI's reviewed public directory. OpenAI plugin and MCP approval are still pending. Changes to listing metadata or skills require a new ZIP upload to the existing OpenAI submission; pushing this repository does not update that submission. Keep plugin releases in step with the MCP server's tools and behavior, which deploy separately.
+Repository marketplace distribution is separate from OpenAI's reviewed public directory. OpenAI approved version 0.1.0, and it is live there. The directory listing changes only when a new upload passes review: changes to listing metadata, skills, or review cases need a new ZIP uploaded to the existing OpenAI submission, and pushing this repository does not update it. New MCP tools may need OpenAI's review before ChatGPT users can call them, so check the submission when a contract sync adds tools. Keep plugin releases in step with the MCP server's tools and behavior, which deploy separately.
+
+`bun scripts/build-openai-zip.ts` writes `dist/setttle-agent-<version>-openai.zip` from the committed `HEAD`, so commit first. It holds only what the OpenAI package reads: `plugin.json`, `.codex-plugin/`, `mcp.json`, `.mcp.json`, `skills/`, `assets/`, `README.md`, and `LICENSE`. The repository's checks, docs, contract, and other hosts' adapters stay out of it.

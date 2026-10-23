@@ -25,7 +25,7 @@ codex plugin add setttle-agent@setttle-tools
 
 In Codex desktop, you can also install Setttle from the **Setttle** marketplace in the plugin browser after adding the repository. Start a new chat and ask Setttle to review your books, reconcile bank activity, or prepare a report. Sign in to Setttle when prompted.
 
-This repository marketplace is available independently of OpenAI's public plugin directory. The OpenAI plugin and MCP submissions are still awaiting approval.
+This repository marketplace is available independently of OpenAI's public plugin directory, where Setttle is also listed. The directory listing updates separately, after OpenAI reviews each new upload.
 
 Claude Code:
 
