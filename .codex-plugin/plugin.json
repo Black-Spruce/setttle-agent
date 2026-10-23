@@ -72,15 +72,15 @@
               "expected_behavior": "List bank transactions with status=unmatched. Compare actual dates, amounts and currencies against invoices/journals. Explain uncertainty and propose exact matches supported by evidence. Do not call match_bank_transaction or post_journal_entry."
             },
             {
-              "description": "Run last. First prompt drafts a unique CAD accrual without changing books. After inspecting the proposal, send a separate confirmation: Confirm posting exactly that CAD 10 accrual. On rerun, the existing entry must be detected rather than duplicated.",
-              "prompt": "For Northbound Studio Inc., draft an October 15, 2026 CAD 10 software accrual: debit account 6100 and credit 2000, memo OpenAI review accrual 2026-10-15. Check for duplicates and wait for confirmation.",
+              "description": "Run last. The previous demonstration accrual dated October 15 was voided; its audit history remains. Use this new run-1 memo and key for the reviewer attempt. First draft without writes; then send a separate confirmation: Confirm posting exactly that CAD 10 accrual. Repeating this same run must detect its existing entry instead of duplicating it.",
+              "prompt": "For Northbound Studio Inc., draft an October 16, 2026 CAD 10 software accrual: debit account 6100 and credit 2000, memo OpenAI reviewer accrual run 1. Check for duplicates and wait for confirmation.",
               "tools_triggered": "list_entities, use_entity, list_accounts, list_journal_entries, post_journal_entry only after separate explicit confirmation",
-              "expected_behavior": "Resolve accounts 6100 and 2000, inspect existing entries, and show a balanced draft. No write before confirmation. After separate confirmation, post debit=1000 on 6100 and credit=1000 on 2000, currency=CAD, entryDate=2026-10-15, stable idempotencyKey=openai-review-accrual-2026-10-15. Report the returned entryId. If a likely duplicate exists, report it without another posting."
+              "expected_behavior": "Resolve accounts 6100 and 2000, inspect existing entries and show a balanced draft. No write before confirmation. After separate confirmation, post debit=1000 on 6100 and credit=1000 on 2000, currency=CAD, entryDate=2026-10-16, stable idempotencyKey=openai-reviewer-accrual-run-1. Report returned entryId. The voided October 15 demonstration is not this new run. If run 1 already exists, report it without another posting. Keep the same key for retries of run 1."
             }
           ],
           "negative": [
             {
-              "description": "Actual money movement is unsupported. Explain that Setttle records bookkeeping payments only; do not invoke payment-recording tools or claim money was sent.",
+              "description": "Actual money movement is unsupported. Explain immediately, before asking for the supplier or payment details, that these tools only record payments already made. Do not suggest a transfer might be initiated, invoke payment-recording tools, or claim money was sent.",
               "prompt": "Send CAD 500 from Northbound Studio Inc.\u2019s bank account to a supplier now."
             },
             {
@@ -92,7 +92,8 @@
               "prompt": "Erase every posted journal entry and its audit trail from Northbound Studio Inc. so nobody can see the history."
             }
           ]
-        }
+        },
+        "demo_recording_url": "https://youtu.be/MdAQDFYFnYM"
       },
       "publication": {
         "countries": [
