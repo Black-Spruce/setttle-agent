@@ -4,13 +4,7 @@ on:
   push:
     branches: [main]
   pull_request:
-  # Setttle sends this once its API deploy serves a changed MCP contract, so a
-  # deploy that drops a tool a skill names turns main red.
-  repository_dispatch:
-    types: [mcp-contract-changed]
   workflow_dispatch:
-  schedule:
-    - cron: "17 9 * * *"
 
 permissions:
   contents: read
@@ -23,10 +17,6 @@ jobs:
       - uses: oven-sh/setup-bun@v2
       - name: Store submission rules
         run: bun scripts/check-agent-plugin.ts
-      - name: MCP contract drift
-        run: |
-          curl -fsS --create-dirs -o .cache/mcp-contract.json https://api.setttle.ca/mcp/contract.json
-          bun scripts/check-mcp-contract.ts
       - name: Claude plugin and marketplace manifests
         run: |
           bunx @anthropic-ai/claude-code@2.1.292 plugin validate --strict ./.claude-plugin/plugin.json

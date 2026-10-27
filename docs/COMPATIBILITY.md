@@ -27,28 +27,22 @@ MCP is the cross-client tool boundary. This package connects to Setttle’s exis
 
 ```sh
 bun scripts/check-agent-plugin.ts
-curl -fsS --create-dirs -o .cache/mcp-contract.json https://api.setttle.ca/mcp/contract.json
-bun scripts/check-mcp-contract.ts
 claude plugin validate --strict ./.claude-plugin/plugin.json
 claude plugin validate --strict ./.claude-plugin/marketplace.json
 ```
 
-CI runs all four on every push and pull request. `scripts/check-agent-plugin.ts` checks the Codex marketplace identity, source, install/authentication policies, and category, and enforces the store rules that host validators don't: OpenAI listing limits and required URLs/assets, parity between the root OpenAI extension and the Codex interface, the Claude directory's license/README/icon rules, skill frontmatter, and no hooks, `bin/`, `commands/`, or `.app.json`. The `claude` commands require Claude Code. Cursor validation is performed by loading the package from `~/.cursor/plugins/local` and checking the plugin components after a window reload.
-
-`scripts/check-mcp-contract.ts` checks every host's part of the package against the deployed MCP contract (below):
-
-- **Tool names.** Skills (read by Claude, Codex/ChatGPT, and Cursor) and Cursor rules may only name contract tools, as backticked snake_case. Every string in the host manifests may only name contract tools, as bare snake_case; this covers the OpenAI review cases' `tools_triggered` lists and expected behavior.
-- **Read-only skills.** A skill whose frontmatter carries `metadata` with `setttle-access: read-only` may not name a `write` tool; it describes forbidden changes in words instead.
-- **OpenAI's MCP review.** Every contract tool carries `readOnlyHint`, `destructiveHint`, and `openWorldHint`; no `write` tool is marked read-only, and no read-only tool is marked destructive (`access` is the consent tier, so a `read` tool such as `use_entity` may still change state); and the OpenAI listing's `capabilities` include `Read` and `Write` exactly when the contract has read and write tools.
-- **Neutral descriptions.** Tool titles and descriptions and skill descriptions must not rank Setttle over other sources ("authoritative", "source of truth", and similar), which OpenAI's scan flags.
-
-It warns, without failing, about contract tools no skill names.
+CI runs all three on every push and pull request. `scripts/check-agent-plugin.ts` checks the Codex marketplace identity, source, install/authentication policies, and category, and enforces the store rules that host validators don't: OpenAI listing limits and required URLs/assets, parity between the root OpenAI extension and the Codex interface, the Claude directory's license/README/icon rules, skill frontmatter, and no hooks, `bin/`, `commands/`, or `.app.json`. The `claude` commands require Claude Code. Cursor validation is performed by loading the package from `~/.cursor/plugins/local` and checking the plugin components after a window reload.
 
 ## MCP contract
 
-The plugin names tools on Setttle's hosted MCP server, which deploys separately from this package. The server publishes its contract at `https://api.setttle.ca/mcp/contract.json`: Setttle's generated `packages/mcp-tools/contract/mcp-contract.json` as deployed, with `contractVersion` 1, then every tool sorted by name with its `name`, `title`, `description`, `access` (`read` or `write`), MCP `annotations`, and `inputSchema`. The URL needs no credential.
+The plugin names tools on Setttle's hosted MCP server, which deploys separately from this package. Setttle commits that server's tool contract and publishes it at `https://api.setttle.ca/mcp/contract.json`. The drift check lives in the Setttle repository (`packages/mcp-tools/scripts/check-agent-plugin-drift.ts`), not here: the Claude directory holds plugin versions whose scripts load the contract. Setttle's CI checks out this repository and runs it whenever the contract changes and daily. It checks that:
 
-The package keeps no copy. Validate downloads the contract on every push and pull request, daily, on demand, and when Setttle sends a `mcp-contract-changed` repository dispatch once its API deploy serves a changed contract, then runs the drift check against that file. A pull request that names a tool the deployed server lacks fails, and a deploy that drops a tool a skill names turns main red.
+- **Tool names.** Skills (read by Claude, Codex/ChatGPT, and Cursor) and Cursor rules only name contract tools, as backticked snake_case, and every string in the host manifests, including the OpenAI review cases, only names contract tools.
+- **Read-only skills.** A skill whose frontmatter carries `metadata` with `setttle-access: read-only` names no `write` tool.
+- **OpenAI's MCP review.** Every tool carries `readOnlyHint`, `destructiveHint`, and `openWorldHint`, the hints agree with each tool's access, and the listing's `capabilities` match the tools.
+- **Ranking.** No tool or skill description ranks Setttle over other sources.
+
+Before pushing a skill change that names new tools, run it from a Setttle checkout: `bun run --cwd packages/mcp-tools plugin:drift <path to this repository>`.
 
 ## Why the package has multiple manifests
 
@@ -59,7 +53,7 @@ The root `plugin.json` is the portability floor. Its `extensions["com.openai"]` 
 Every push to main reaches the Claude directory through its webhook, so main must only name tools the deployed server has. OpenAI does not pick up pushes; it needs a new ZIP upload. Release a change that depends on new MCP tools in this order:
 
 1. Deploy the Setttle API with the new tools.
-2. Merge the skill changes that use the new tools. The drift check fails on them until the deployed contract has the tools, which is the release gate.
+2. Run the drift check from Setttle, then merge the skill changes that use the new tools. The check fails on them until the contract has the tools, which is the release gate.
 3. Raise the version with `bun scripts/bump-version.ts <major|minor|patch|x.y.z>`, then build the OpenAI ZIP with `bun scripts/build-openai-zip.ts` and upload it to the OpenAI submission.
 
 Raise `version` in `plugin.json`, all three native manifests, and the Claude and Cursor marketplace entries together; the check fails if they differ. `bun scripts/bump-version.ts` does this in one step: it takes `major`, `minor`, `patch`, or an exact version, refuses to write anything if the files already disagree, and keeps each file's formatting. The Codex catalog reads the version from the plugin manifest.
