@@ -1,7 +1,7 @@
 name: Sync MCP contract
 
-# Keeps contract/mcp-contract.json in step with Setttle's MCP tool contract.
-# When Setttle's copy differs, this opens or updates a pull request on
+# Keeps contract/mcp-contract.json in step with the MCP tool contract the
+# Setttle API serves. When the deployed contract differs, this opens or updates a pull request on
 # sync/mcp-contract. Merging it does not release the plugin; see
 # docs/COMPATIBILITY.md "Releasing".
 
@@ -21,8 +21,8 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  SOURCE_REPO: Black-Spruce/setttle
-  SOURCE_PATH: packages/mcp-tools/contract/mcp-contract.json
+  # Public: the contract holds only what tools/list serves. No credential.
+  SOURCE_URL: https://api.setttle.ca/mcp/contract.json
   TARGET_PATH: contract/mcp-contract.json
   BRANCH: sync/mcp-contract
 
@@ -37,30 +37,19 @@ jobs:
 
       - name: Fetch Setttle's contract
         id: fetch
-        env:
-          TOKEN: ${{ secrets.SETTTLE_CONTRACT_READ_TOKEN }}
         run: |
-          if [ -z "$TOKEN" ]; then
-            echo "::notice::SETTTLE_CONTRACT_READ_TOKEN is not set; skipping the contract sync."
-            echo "result=skip" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          status=$(curl -sS -o "$RUNNER_TEMP/mcp-contract.json" -w '%{http_code}' \
-            -H "Authorization: Bearer $TOKEN" \
-            -H "Accept: application/vnd.github.raw+json" \
-            -H "X-GitHub-Api-Version: 2022-11-28" \
-            "https://api.github.com/repos/$SOURCE_REPO/contents/$SOURCE_PATH?ref=main")
+          status=$(curl -sS -o "$RUNNER_TEMP/mcp-contract.json" -w '%{http_code}' "$SOURCE_URL")
           if [ "$status" = "404" ]; then
-            echo "::notice::$SOURCE_PATH is not on $SOURCE_REPO main yet; nothing to sync."
+            echo "::notice::$SOURCE_URL is not deployed yet; nothing to sync."
             echo "result=skip" >> "$GITHUB_OUTPUT"
             exit 0
           fi
           if [ "$status" != "200" ]; then
-            echo "::error::Fetching $SOURCE_PATH from $SOURCE_REPO returned HTTP $status."
+            echo "::error::Fetching $SOURCE_URL returned HTTP $status."
             exit 1
           fi
           if cmp -s "$RUNNER_TEMP/mcp-contract.json" "$TARGET_PATH"; then
-            echo "::notice::$TARGET_PATH already matches $SOURCE_REPO main."
+            echo "::notice::$TARGET_PATH already matches $SOURCE_URL."
             echo "result=unchanged" >> "$GITHUB_OUTPUT"
           else
             echo "result=changed" >> "$GITHUB_OUTPUT"
@@ -87,7 +76,7 @@ jobs:
           cp "$RUNNER_TEMP/mcp-contract.json" "$TARGET_PATH"
 
           {
-            echo "Updates \`$TARGET_PATH\` to match \`$SOURCE_PATH\` on [$SOURCE_REPO](https://github.com/$SOURCE_REPO) main."
+            echo "Updates \`$TARGET_PATH\` to match the contract the Setttle API serves at <$SOURCE_URL>."
             echo
             echo "## What changed"
             echo
@@ -107,7 +96,6 @@ jobs:
             echo
             echo "## Before merging"
             echo
-            echo "- **Do not merge until the Setttle API with these tools is deployed** to \`https://api.setttle.ca/mcp\`. Every push to main reaches the Claude directory, so skills that name tools the server does not have yet would reach users."
             echo "- **Merging does not release the plugin.** A release still means raising \`version\` in every manifest and marketplace entry with \`bun scripts/bump-version.ts\`, per \`docs/COMPATIBILITY.md\` \"Releasing\", and a new ZIP upload for OpenAI."
             echo "- Pull requests opened by this workflow do not start other workflows. Close and reopen this pull request to run Validate."
           } > "$RUNNER_TEMP/body.md"
@@ -117,7 +105,7 @@ jobs:
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git checkout -B "$BRANCH"
             git add "$TARGET_PATH"
-            git commit -m "chore: sync MCP contract from $SOURCE_REPO"
+            git commit -m "chore: sync MCP contract from the Setttle API"
             git push --force origin "$BRANCH"
           fi
 

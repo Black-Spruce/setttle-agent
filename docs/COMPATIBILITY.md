@@ -45,9 +45,9 @@ It warns, without failing, about contract tools no skill names.
 
 ## MCP contract
 
-The plugin names tools on Setttle's hosted MCP server, which deploys separately from this package. `contract/mcp-contract.json` is a byte-identical copy of Setttle's generated `packages/mcp-tools/contract/mcp-contract.json`: `contractVersion` 1, then every tool sorted by name with its `name`, `title`, `description`, `access` (`read` or `write`), MCP `annotations`, and `inputSchema`. Do not edit it by hand.
+The plugin names tools on Setttle's hosted MCP server, which deploys separately from this package. `contract/mcp-contract.json` is a byte-identical copy of the contract the Setttle API serves at `https://api.setttle.ca/mcp/contract.json`, which is Setttle's generated `packages/mcp-tools/contract/mcp-contract.json` as deployed: `contractVersion` 1, then every tool sorted by name with its `name`, `title`, `description`, `access` (`read` or `write`), MCP `annotations`, and `inputSchema`. Do not edit it by hand.
 
-`.github/workflows/sync-mcp-contract.yml` keeps the copy current. Setttle sends a `mcp-contract-changed` repository dispatch when its contract changes on main; the workflow also runs daily and on demand. It reads Setttle's file through the GitHub API with the `SETTTLE_CONTRACT_READ_TOKEN` secret, a fine-grained token with contents read access to `Black-Spruce/setttle`, and skips with a notice when the secret is missing. When the file differs, it force-updates branch `sync/mcp-contract` from main and opens or updates one pull request listing the added, removed, and changed tools and the drift check's result. When the file is unchanged it does nothing. Opening the pull request needs "Allow GitHub Actions to create and approve pull requests" enabled in the repository's Actions settings. Pull requests opened with the workflow token do not start other workflows, so close and reopen the sync pull request to run Validate on it.
+`.github/workflows/sync-mcp-contract.yml` keeps the copy current. Setttle sends a `mcp-contract-changed` repository dispatch once the API deploy serves a changed contract; the workflow also runs daily and on demand. It fetches the public contract URL without a credential, so this repository holds no Setttle secret. When the file differs, it force-updates branch `sync/mcp-contract` from main and opens or updates one pull request listing the added, removed, and changed tools and the drift check's result. When the file is unchanged it does nothing. Opening the pull request needs "Allow GitHub Actions to create and approve pull requests" enabled in the repository's Actions settings. Pull requests opened with the workflow token do not start other workflows, so close and reopen the sync pull request to run Validate on it.
 
 ## Why the package has multiple manifests
 
@@ -58,7 +58,7 @@ The root `plugin.json` is the portability floor. Its `extensions["com.openai"]` 
 Every push to main reaches the Claude directory through its webhook, so main must only name tools the deployed server has. OpenAI does not pick up pushes; it needs a new ZIP upload. Release a change that depends on new MCP tools in this order:
 
 1. Deploy the Setttle API with the new tools.
-2. Merge the `sync/mcp-contract` pull request. Merging it does not release the plugin.
+2. Merge the `sync/mcp-contract` pull request, which only ever carries the deployed contract. Merging it does not release the plugin.
 3. Merge the skill changes that use the new tools. The drift check fails on them until the contract has the tools, which is the release gate.
 4. Raise the version with `bun scripts/bump-version.ts <major|minor|patch|x.y.z>`, then build the OpenAI ZIP with `bun scripts/build-openai-zip.ts` and upload it to the OpenAI submission.
 
