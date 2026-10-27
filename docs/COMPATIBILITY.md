@@ -27,8 +27,8 @@ MCP is the cross-client tool boundary. This package connects to Setttle’s exis
 
 ```sh
 bun scripts/check-agent-plugin.ts
-curl -fsSo /tmp/mcp-contract.json https://api.setttle.ca/mcp/contract.json
-bun scripts/check-mcp-contract.ts /tmp/mcp-contract.json
+curl -fsS --create-dirs -o .cache/mcp-contract.json https://api.setttle.ca/mcp/contract.json
+bun scripts/check-mcp-contract.ts
 claude plugin validate --strict ./.claude-plugin/plugin.json
 claude plugin validate --strict ./.claude-plugin/marketplace.json
 ```

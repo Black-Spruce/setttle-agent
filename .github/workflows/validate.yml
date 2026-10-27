@@ -25,8 +25,8 @@ jobs:
         run: bun scripts/check-agent-plugin.ts
       - name: MCP contract drift
         run: |
-          curl -fsS -o "$RUNNER_TEMP/mcp-contract.json" https://api.setttle.ca/mcp/contract.json
-          bun scripts/check-mcp-contract.ts "$RUNNER_TEMP/mcp-contract.json"
+          curl -fsS --create-dirs -o .cache/mcp-contract.json https://api.setttle.ca/mcp/contract.json
+          bun scripts/check-mcp-contract.ts
       - name: Claude plugin and marketplace manifests
         run: |
           bunx @anthropic-ai/claude-code@2.1.292 plugin validate --strict ./.claude-plugin/plugin.json
