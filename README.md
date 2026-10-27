@@ -46,7 +46,7 @@ Cursor loads a local plugin from `~/.cursor/plugins/local/setttle-agent`. Copy t
 - Claude: `.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json`, `.mcp.json`
 - Cursor: `.cursor-plugin/plugin.json`, `.cursor-plugin/marketplace.json`, `rules/`
 
-`scripts/` and `.github/` hold the repository's own checks, and `contract/` holds a copy of the Setttle MCP tool contract they check against. The plugin never runs them. See [docs/COMPATIBILITY.md](docs/COMPATIBILITY.md) for how each host reads the package.
+`scripts/` and `.github/` hold the repository's own checks. The plugin never runs them. See [docs/COMPATIBILITY.md](docs/COMPATIBILITY.md) for how each host reads the package.
 
 ## Development
 

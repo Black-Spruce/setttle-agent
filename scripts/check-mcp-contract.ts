@@ -3,10 +3,10 @@
  *
  * The plugin's skills, rules, manifests, and OpenAI test cases name tools on
  * Setttle's hosted MCP server, which deploys separately from this package.
- * This check compares them with the vendored contract in
- * `contract/mcp-contract.json`, which `.github/workflows/sync-mcp-contract.yml`
- * keeps in step with Setttle. Every host reads a different part of the
- * package, so each is checked:
+ * This check compares them with the contract that server serves at
+ * https://api.setttle.ca/mcp/contract.json, saved to a file and passed as the
+ * argument. Nothing in this package fetches it. Every host reads a different
+ * part of the package, so each is checked:
  *
  * - Claude, Codex/ChatGPT, and Cursor skills (`skills/`) and Cursor rules
  *   (`rules/`) may only name contract tools, as backticked snake_case.
@@ -23,14 +23,19 @@
  * Contract tools that no skill names are a warning, not a failure.
  *
  * Usage:
- *   bun scripts/check-mcp-contract.ts
+ *   curl -fsSo /tmp/mcp-contract.json https://api.setttle.ca/mcp/contract.json
+ *   bun scripts/check-mcp-contract.ts /tmp/mcp-contract.json
  */
 
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
 const ROOT = join(import.meta.dir, "..");
-const CONTRACT = "contract/mcp-contract.json";
+const CONTRACT = process.argv[2];
+if (!CONTRACT) {
+  console.error("usage: bun scripts/check-mcp-contract.ts <contract file>");
+  process.exit(2);
+}
 const MANIFESTS = [
   "plugin.json",
   ".codex-plugin/plugin.json",
@@ -63,7 +68,7 @@ const errors: string[] = [];
 const warnings: string[] = [];
 const readJson = (path: string) => JSON.parse(readFileSync(join(ROOT, path), "utf8"));
 
-const contract = readJson(CONTRACT) as { contractVersion: number; tools: ContractTool[] };
+const contract = JSON.parse(readFileSync(CONTRACT, "utf8")) as { contractVersion: number; tools: ContractTool[] };
 if (contract.contractVersion !== 1) {
   errors.push(`${CONTRACT}: unsupported contractVersion ${contract.contractVersion}`);
 }

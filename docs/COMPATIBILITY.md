@@ -27,14 +27,15 @@ MCP is the cross-client tool boundary. This package connects to Setttle’s exis
 
 ```sh
 bun scripts/check-agent-plugin.ts
-bun scripts/check-mcp-contract.ts
+curl -fsSo /tmp/mcp-contract.json https://api.setttle.ca/mcp/contract.json
+bun scripts/check-mcp-contract.ts /tmp/mcp-contract.json
 claude plugin validate --strict ./.claude-plugin/plugin.json
 claude plugin validate --strict ./.claude-plugin/marketplace.json
 ```
 
 CI runs all four on every push and pull request. `scripts/check-agent-plugin.ts` checks the Codex marketplace identity, source, install/authentication policies, and category, and enforces the store rules that host validators don't: OpenAI listing limits and required URLs/assets, parity between the root OpenAI extension and the Codex interface, the Claude directory's license/README/icon rules, skill frontmatter, and no hooks, `bin/`, `commands/`, or `.app.json`. The `claude` commands require Claude Code. Cursor validation is performed by loading the package from `~/.cursor/plugins/local` and checking the plugin components after a window reload.
 
-`scripts/check-mcp-contract.ts` checks every host's part of the package against the vendored MCP contract (below):
+`scripts/check-mcp-contract.ts` checks every host's part of the package against the deployed MCP contract (below):
 
 - **Tool names.** Skills (read by Claude, Codex/ChatGPT, and Cursor) and Cursor rules may only name contract tools, as backticked snake_case. Every string in the host manifests may only name contract tools, as bare snake_case; this covers the OpenAI review cases' `tools_triggered` lists and expected behavior.
 - **Read-only skills.** A skill whose frontmatter carries `metadata` with `setttle-access: read-only` may not name a `write` tool; it describes forbidden changes in words instead.
@@ -45,9 +46,9 @@ It warns, without failing, about contract tools no skill names.
 
 ## MCP contract
 
-The plugin names tools on Setttle's hosted MCP server, which deploys separately from this package. `contract/mcp-contract.json` is a byte-identical copy of the contract the Setttle API serves at `https://api.setttle.ca/mcp/contract.json`, which is Setttle's generated `packages/mcp-tools/contract/mcp-contract.json` as deployed: `contractVersion` 1, then every tool sorted by name with its `name`, `title`, `description`, `access` (`read` or `write`), MCP `annotations`, and `inputSchema`. Do not edit it by hand.
+The plugin names tools on Setttle's hosted MCP server, which deploys separately from this package. The server publishes its contract at `https://api.setttle.ca/mcp/contract.json`: Setttle's generated `packages/mcp-tools/contract/mcp-contract.json` as deployed, with `contractVersion` 1, then every tool sorted by name with its `name`, `title`, `description`, `access` (`read` or `write`), MCP `annotations`, and `inputSchema`. The URL needs no credential.
 
-`.github/workflows/sync-mcp-contract.yml` keeps the copy current. Setttle sends a `mcp-contract-changed` repository dispatch once the API deploy serves a changed contract; the workflow also runs daily and on demand. It fetches the public contract URL without a credential, so this repository holds no Setttle secret. When the file differs, it force-updates branch `sync/mcp-contract` from main and opens or updates one pull request listing the added, removed, and changed tools and the drift check's result. When the file is unchanged it does nothing. Opening the pull request needs "Allow GitHub Actions to create and approve pull requests" enabled in the repository's Actions settings. Pull requests opened with the workflow token do not start other workflows, so close and reopen the sync pull request to run Validate on it.
+The package keeps no copy. Validate downloads the contract on every push and pull request, daily, on demand, and when Setttle sends a `mcp-contract-changed` repository dispatch once its API deploy serves a changed contract, then runs the drift check against that file. A pull request that names a tool the deployed server lacks fails, and a deploy that drops a tool a skill names turns main red.
 
 ## Why the package has multiple manifests
 
@@ -58,9 +59,8 @@ The root `plugin.json` is the portability floor. Its `extensions["com.openai"]` 
 Every push to main reaches the Claude directory through its webhook, so main must only name tools the deployed server has. OpenAI does not pick up pushes; it needs a new ZIP upload. Release a change that depends on new MCP tools in this order:
 
 1. Deploy the Setttle API with the new tools.
-2. Merge the `sync/mcp-contract` pull request, which only ever carries the deployed contract. Merging it does not release the plugin.
-3. Merge the skill changes that use the new tools. The drift check fails on them until the contract has the tools, which is the release gate.
-4. Raise the version with `bun scripts/bump-version.ts <major|minor|patch|x.y.z>`, then build the OpenAI ZIP with `bun scripts/build-openai-zip.ts` and upload it to the OpenAI submission.
+2. Merge the skill changes that use the new tools. The drift check fails on them until the deployed contract has the tools, which is the release gate.
+3. Raise the version with `bun scripts/bump-version.ts <major|minor|patch|x.y.z>`, then build the OpenAI ZIP with `bun scripts/build-openai-zip.ts` and upload it to the OpenAI submission.
 
 Raise `version` in `plugin.json`, all three native manifests, and the Claude and Cursor marketplace entries together; the check fails if they differ. `bun scripts/bump-version.ts` does this in one step: it takes `major`, `minor`, `patch`, or an exact version, refuses to write anything if the files already disagree, and keeps each file's formatting. The Codex catalog reads the version from the plugin manifest.
 
