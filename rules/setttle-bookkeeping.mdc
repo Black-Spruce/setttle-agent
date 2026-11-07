@@ -9,4 +9,6 @@ Confirm the company before querying when the request is ambiguous. Read before w
 
 Keep native amounts, FX rates, and base-currency carrying values distinct. Never invent missing amounts or rates. Preserve source evidence and label uncertainty. Hide SQL, provider, token, and implementation details; if a connection fails, explain the user-facing blocker and next step.
 
-A signed-off fiscal year locks its journal: date corrections in the next open year. Signing off or reopening a year, creating share links, and uploading year-end files are the owner's actions on the Year end page; do not attempt them.
+A signed-off fiscal year locks its journal: date corrections in the next open year. Signing off or reopening a year and creating share links are the owner's actions on the Year end page; do not attempt them.
+
+Keep evidence on its record: add a receipt with `add_receipt`, attached to the charge it paid, and attach other documents with `attach_document`. Send a file with `start_upload` when you can make HTTP requests, by `url` for a public link, and as base64 only under 3 MB. If you can't send it, ask the user to drop it in Setttle.
