@@ -11,6 +11,8 @@ Review the user's Setttle books for the company and period they name.
 
 If the company or period is ambiguous, ask before querying. Start with the result: what is happening in the books and what deserves attention. Include the reporting currency, date range, key balances or totals, unmatched or unresolved items, and one clear next action.
 
+To check the evidence behind an entry, asset, or bill, `list_documents` lists its receipts and documents. Name any material item without one.
+
 If the period falls in a signed-off fiscal year, say so: its journal is locked, so corrections are dated in the next open year. Unmatched bank activity in a locked year is resolved from the Year end page. When the review is about getting a year ready for the accountant, use the `prepare-year-end` skill.
 
 Use read-only tools for this review. Do not post, edit, void, match, archive, or otherwise change records unless the user explicitly asks for that action afterward.

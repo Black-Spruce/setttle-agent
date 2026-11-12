@@ -71,6 +71,12 @@
               "expected_behavior": "List bank transactions with status=unmatched. Compare actual dates, amounts and currencies against invoices/journals. Explain uncertainty and propose exact matches supported by evidence. Do not call match_bank_transaction or post_journal_entry."
             },
             {
+              "description": "Seeded company has an unmatched USD 45.00 FIGMA PROFESSIONAL charge on its USD bank account, dated three days before the account was prepared. Share a PDF or image of a Figma Professional receipt for USD 45.00, no sales tax, dated that day. Adding a receipt never posts an entry.",
+              "prompt": "Add this Figma receipt to Northbound Studio Inc. and attach it to the charge it paid.",
+              "tools_triggered": "list_entities, use_entity, list_bank_transactions, add_receipt",
+              "expected_behavior": "Find the unmatched USD 45.00 FIGMA PROFESSIONAL charge. Call add_receipt once with the shared file, facts read from the receipt (vendor Figma, the receipt date, total=4500, currency=USD) and that charge's bankTransactionId. Report that the receipt was added and waits on the charge until it is posted, or say why it did not attach. Do not post, match, or categorize the charge."
+            },
+            {
               "description": "Run last. The previous demonstration accrual dated October 15 was voided; its audit history remains. Use this new run-1 memo and key for the reviewer attempt. First draft without writes; then send a separate confirmation: Confirm posting exactly that CAD 10 accrual. Repeating this same run must detect its existing entry instead of duplicating it.",
               "prompt": "For Northbound Studio Inc., draft an October 16, 2026 CAD 10 software accrual: debit account 6100 and credit 2000, memo OpenAI reviewer accrual run 1. Check for duplicates and wait for confirmation.",
               "tools_triggered": "list_entities, use_entity, list_accounts, list_journal_entries, post_journal_entry only after separate explicit confirmation",

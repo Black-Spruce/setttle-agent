@@ -12,7 +12,7 @@ Setttle Agent connects your AI assistant to your Setttle books. It helps you rev
 
 The plugin runs no local code. It connects only to `https://api.setttle.ca/mcp`. You sign in through your assistant's OAuth flow, where you choose read-only access or permission to make changes. The plugin stores no credentials. Advanced users can use a `sett_` API token instead.
 
-The assistant sends Setttle the tool requests needed to answer you, such as listing journal entries or posting a confirmed entry. Recording a payment writes a ledger entry only; Setttle never moves money. See the [privacy policy](https://setttle.ca/legal/privacy) and [terms](https://setttle.ca/legal/terms).
+The assistant sends Setttle the tool requests needed to answer you, such as listing journal entries or posting a confirmed entry, and the receipts and documents you ask it to add. Recording a payment writes a ledger entry only; Setttle never moves money. See the [privacy policy](https://setttle.ca/legal/privacy) and [terms](https://setttle.ca/legal/terms).
 
 ## Install
 
