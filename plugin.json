@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "setttle-agent",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Help Setttle users review books, reconcile activity, prepare reports, and record confirmed changes.",
   "author": {
     "name": "Black Spruce Dev",
@@ -38,8 +38,8 @@
           "Find unmatched bank transactions from last month and suggest matches.",
           "Prepare a profit and loss for this quarter."
         ],
-        "logo": "./assets/setttle-mark.svg",
-        "composerIcon": "./assets/setttle-mark.svg"
+        "logo": "./assets/setttle-mark.png",
+        "composerIcon": "./assets/setttle-mark.png"
       },
       "review": {
         "commerce": false,
@@ -105,7 +105,7 @@
           "CA",
           "US"
         ],
-        "release_notes": "Adds a year-end workflow: review a fiscal year's checklist and company details, and, after confirmation, update checklist items, the first year's start date, and company registration details. Skills now note when a signed-off year locks the journal."
+        "release_notes": "Adds receipts and documents: add a receipt and attach it to the bank charge or posted entry it paid, and attach supporting documents to entries, assets, and year-end files. Adds a Wave import review: see what an import still needs and apply the suggestions and account mappings the owner confirms."
       }
     }
   }

@@ -26,12 +26,14 @@ MCP is the cross-client tool boundary. This package connects to Setttle’s exis
 ## Validation matrix
 
 ```sh
-bun scripts/check-agent-plugin.ts
+# from a Setttle checkout
+bun run --cwd packages/mcp-tools plugin:check <path to this repository>
+# from this repository
 claude plugin validate --strict ./.claude-plugin/plugin.json
 claude plugin validate --strict ./.claude-plugin/marketplace.json
 ```
 
-CI runs all three on every push and pull request. `scripts/check-agent-plugin.ts` checks the Codex marketplace identity, source, install/authentication policies, and category, and enforces the store rules that host validators don't: OpenAI listing limits and required URLs/assets, parity between the root OpenAI extension and the Codex interface, the Claude directory's license/README/icon rules, skill frontmatter, and no hooks, `bin/`, `commands/`, or `.app.json`. The `claude` commands require Claude Code. Cursor validation is performed by loading the package from `~/.cursor/plugins/local` and checking the plugin components after a window reload.
+This repository's CI runs the two `claude` validations on every push and pull request. The store-rule check lives in the Setttle repository (`packages/mcp-tools/scripts/check-agent-plugin.ts`), with the release scripts, because the Claude directory accepts only Markdown, text, JSON, YAML, and PNG, JPEG, GIF, WebP, or ICO images from organizations that aren't Verified, and every file committed here ships. Setttle's CI runs it with the drift check. It checks every committed file against those directory rules, and checks the Codex marketplace identity, source, install/authentication policies, and category, and enforces the store rules that host validators don't: OpenAI listing limits and required URLs/assets, parity between the root OpenAI extension and the Codex interface, the Claude directory's license/README/icon rules (every icon is a square PNG), skill frontmatter, and no hooks, `bin/`, `commands/`, or `.app.json`. The `claude` commands require Claude Code. Cursor validation is performed by loading the package from `~/.cursor/plugins/local` and checking the plugin components after a window reload.
 
 ## MCP contract
 
@@ -54,12 +56,12 @@ Every push to main reaches the Claude directory through its webhook, so main mus
 
 1. Deploy the Setttle API with the new tools.
 2. Run the drift check from Setttle, then merge the skill changes that use the new tools. The check fails on them until the contract has the tools, which is the release gate.
-3. Raise the version with `bun scripts/bump-version.ts <major|minor|patch|x.y.z>`, then build the OpenAI ZIP with `bun scripts/build-openai-zip.ts` and upload it to the OpenAI submission.
+3. From a Setttle checkout, raise the version with `bun run --cwd packages/mcp-tools plugin:bump <major|minor|patch|x.y.z> <path to this repository>`, commit it here, then build the OpenAI ZIP with `bun run --cwd packages/mcp-tools plugin:zip <path to this repository>` and upload it to the OpenAI submission.
 
-Raise `version` in `plugin.json`, all three native manifests, and the Claude and Cursor marketplace entries together; the check fails if they differ. `bun scripts/bump-version.ts` does this in one step: it takes `major`, `minor`, `patch`, or an exact version, refuses to write anything if the files already disagree, and keeps each file's formatting. The Codex catalog reads the version from the plugin manifest.
+Raise `version` in `plugin.json`, all three native manifests, and the Claude and Cursor marketplace entries together; the check fails if they differ. `plugin:bump` does this in one step: it takes `major`, `minor`, `patch`, or an exact version, refuses to write anything if the files already disagree, and keeps each file's formatting. The Codex catalog reads the version from the plugin manifest.
 
 Codex users add this Git repository with `codex plugin marketplace add Black-Spruce/setttle-agent` and install with `codex plugin add setttle-agent@setttle-tools`, or use the desktop plugin browser after adding the marketplace. Refresh the catalog with `codex plugin marketplace upgrade setttle-tools` when new changes are published.
 
 Repository marketplace distribution is separate from OpenAI's reviewed public directory. OpenAI approved version 0.1.0, and it is live there. The directory listing changes only when a new upload passes review: changes to listing metadata, skills, or review cases need a new ZIP uploaded to the existing OpenAI submission, and pushing this repository does not update it. New MCP tools may need OpenAI's review before ChatGPT users can call them, so check the submission when a contract sync adds tools. Keep plugin releases in step with the MCP server's tools and behavior, which deploy separately.
 
-`bun scripts/build-openai-zip.ts` writes `dist/setttle-agent-<version>-openai.zip` from the committed `HEAD`, so commit first. It holds only what the OpenAI package reads: `plugin.json`, `.codex-plugin/`, `mcp.json`, `.mcp.json`, `skills/`, `assets/`, `README.md`, and `LICENSE`. The repository's checks, docs, contract, and other hosts' adapters stay out of it.
+`plugin:zip` writes this repository's `dist/setttle-agent-<version>-openai.zip` from the committed `HEAD`, so commit first. It holds only what the OpenAI package reads: `plugin.json`, `.codex-plugin/`, `mcp.json`, `.mcp.json`, `skills/`, `assets/`, `README.md`, and `LICENSE`. The repository's checks, docs, contract, and other hosts' adapters stay out of it.
