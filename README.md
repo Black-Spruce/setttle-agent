@@ -46,14 +46,19 @@ Cursor loads a local plugin from `~/.cursor/plugins/local/setttle-agent`. Copy t
 - Claude: `.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json`, `.mcp.json`
 - Cursor: `.cursor-plugin/plugin.json`, `.cursor-plugin/marketplace.json`, `rules/`
 
-`scripts/` and `.github/` hold the repository's own checks. The plugin never runs them. See [docs/COMPATIBILITY.md](docs/COMPATIBILITY.md) for how each host reads the package.
+`.github/` holds the repository's own CI. The store-rule checks and release scripts live in the Setttle repository, because the Claude directory refuses scripts in a plugin. See [docs/COMPATIBILITY.md](docs/COMPATIBILITY.md) for how each host reads the package.
 
 ## Development
 
-Try local changes in Claude Code with `claude --plugin-dir .`. Before pushing, run:
+Try local changes in Claude Code with `claude --plugin-dir .`. Before pushing, run from a Setttle checkout:
 
 ```sh
-bun scripts/check-agent-plugin.ts
+bun run --cwd packages/mcp-tools plugin:check <path to this repository>
+```
+
+and from this repository:
+
+```sh
 claude plugin validate --strict ./.claude-plugin/plugin.json
 ```
 
