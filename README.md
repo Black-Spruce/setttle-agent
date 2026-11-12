@@ -6,7 +6,7 @@ Setttle Agent connects your AI assistant to your Setttle books. It helps you rev
 
 - **Skills**: `setttle-bookkeeping` sets how the assistant handles your books. `review-books`, `reconcile-bank`, `record-transaction`, `prepare-report`, `prepare-year-end`, and `review-import` cover the common workflows.
 - **MCP server**: one remote server at `https://api.setttle.ca/mcp` over Streamable HTTP.
-- **Cursor rule**: `rules/setttle-bookkeeping.mdc` carries the same guidance for Cursor.
+- **Cursor rule**: `rules/setttle-bookkeeping.md` carries the same guidance for Cursor.
 
 ## What it connects to and sends
 
