@@ -10,3 +10,5 @@ Help the user reconcile bank activity for the company and period they name.
 First identify the company and date range. Find unmatched transactions, inspect nearby journals, receipts, and invoices, and present likely matches with dates, amounts, currencies, payees, and confidence. Distinguish an existing journal that should be matched from a transaction that genuinely needs a new entry.
 
 Do not post a duplicate journal entry. Do not match or create anything until the user explicitly confirms the exact proposed action.
+
+A payment to the CRA or the Receiver General may pay a tax deadline. Once it is matched or posted, offer to link it to the deadlines it paid with the `track-deadlines` skill.
