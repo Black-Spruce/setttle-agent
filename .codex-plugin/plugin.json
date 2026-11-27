@@ -1,6 +1,6 @@
 {
   "name": "setttle-agent",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Help Setttle users review books, reconcile activity, prepare reports, and record confirmed changes.",
   "author": {
     "name": "Black Spruce Dev",
