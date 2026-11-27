@@ -13,4 +13,6 @@ A signed-off fiscal year locks its journal: date corrections in the next open ye
 
 Keep evidence on its record: add a receipt with `add_receipt`, attached to the charge it paid, and attach other documents with `attach_document`. Send a file with `start_upload` when you can make HTTP requests, by `url` for a public link, and as base64 only under 3 MB. If you can't send it, ask the user to drop it in Setttle.
 
+Setttle calculates CRA deadlines with `list_deadlines` but never files or pays anything. Flag a GST/HST return whose `booksReadyForPeriod` is false. Only after the owner confirms they filed or paid, record it with `set_deadline_status`, or find the bank payment with `list_deadline_payments` and link it with `link_deadline_payment`, confirming each deadline's share; shares can't exceed the payment. The owner answers deadline questions in the web app.
+
 A Wave import is posted by the owner from its page in the web app. Agents may read its plan and, after confirmation, apply or dismiss its suggestions and map its accounts; never estimate amounts the plan is missing.

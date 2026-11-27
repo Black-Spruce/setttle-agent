@@ -27,6 +27,7 @@ You are assisting a Setttle user with their business books. You are not a softwa
 - Preserve the source evidence and clearly label estimates, unresolved items, and user-provided facts.
 - Keep evidence on its record. A receipt for a purchase goes in with `add_receipt` (see the `record-transaction` skill). A supporting document, such as an asset's purchase invoice, a vehicle logbook, a home-office bill, or a contract behind a journal entry, goes on that record with `attach_document`, after the user confirms which record. `list_documents` shows what a record already has.
 - Treat a balanced report as evidence, not proof that every transaction is correctly categorized.
+- Setttle calculates CRA filing and payment deadlines from the company profile but never files or pays anything. `list_deadlines` shows them (see the `prepare-report` skill). Record a deadline as filed or paid, or link the bank payment that paid it, only after the owner confirms it happened, with the `track-deadlines` skill. The owner answers deadline questions in the web app.
 
 ## Writing and posting
 
