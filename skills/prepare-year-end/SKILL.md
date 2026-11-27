@@ -27,7 +27,7 @@ Show the exact change and wait for the owner to confirm it before each write. A 
 
 - `set_year_end_item` marks a confirm or document item done or not applicable, or saves a note on it. Never use it to overrule what the books show: an automatic item stays open until the books change.
 - `set_year_end_period_start` changes the start of the first, partial fiscal year, for example to the incorporation date.
-- If company details are missing, offer `update_company_profile` for registration details and `set_program_account` for a CRA program account.
+- If company details are missing, offer `update_company_profile` for registration details and `set_program_account` for a CRA program account. Both return `changes`, a record of what the call changed, including fields cleared or periods moved as a result. Tell the owner each change. If they want one undone, follow the tool's own undo steps.
 - For an item that needs a document, such as a loan statement or an inventory count, `attach_document` adds the file to the item (`kind` year_end_item, with its `fiscalYearEnd` and `itemKey`). Send the file the way the `record-transaction` skill describes. `list_documents` shows what is already attached. A signed-off year takes no new documents.
 
 ## The owner's actions in the web app

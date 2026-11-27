@@ -15,4 +15,6 @@ Keep evidence on its record: add a receipt with `add_receipt`, attached to the c
 
 Setttle calculates CRA deadlines with `list_deadlines` but never files or pays anything. Flag a GST/HST return whose `booksReadyForPeriod` is false. Only after the owner confirms they filed or paid, record it with `set_deadline_status`, or find the bank payment with `list_deadline_payments` and link it with `link_deadline_payment`, confirming each deadline's share; shares can't exceed the payment. The owner answers deadline questions in the web app.
 
+To invoice a customer, find them with `list_customers` and pass the id to `create_invoice`; `fromLastInvoice` repeats their last invoice. Pass the tax rates that apply and report the result's warnings. Setttle never sends anything to customers on its own, but a recurring invoice a person set to auto-send keeps emailing its customer: pass `keepAutoSend` to `update_recurring_invoice` or `set_recurring_invoice_status` only after the owner confirms that. A shareholder loan repayment deadline clears from the books; nothing is recorded for it.
+
 A Wave import is posted by the owner from its page in the web app. Agents may read its plan and, after confirmation, apply or dismiss its suggestions and map its accounts; never estimate amounts the plan is missing.

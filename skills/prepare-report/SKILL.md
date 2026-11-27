@@ -21,6 +21,7 @@ When the user asks what's due, what to file, or wants deadlines in a report, cal
 - GST/HST returns carry their lines from the books: 101 sales, 105 tax collected, 108 input tax credits, 109 net tax, and 110 instalments for annual filers. Format the minor units in the company's currency. If `linesUnavailable` is set, say why there are no lines.
 - If `booksReadyForPeriod` is false, the books are only caught up through `booksCaughtUpThrough`. Say so plainly: the return's lines may still change, and the period's bank activity should be reconciled before the owner files.
 - Also cover the T2 (corporations) or the T1 with T2125 (sole proprietors and partners) and their balance-due dates, tax instalments, and T4 and T5 slips, as the result lists them. Say what the owner has already recorded as filed or paid.
+- A corporation can have a shareholder loan repayment deadline: one year after a fiscal year end at which a shareholder owed the corporation money. Give the shareholder and `owingMinor`. One with status repaid_late was repaid after its due date: say so and suggest the owner checks with their accountant.
 - `questions` are facts Setttle still needs, such as whether salary or dividends were paid. Mention any still unanswered and which deadlines they hold back. The owner answers them on the Deadlines page in the web app; don't answer them for the owner.
 - The dates are general CRA rules, not advice; each deadline links its rule's CRA source. Setttle never files or pays anything. The owner files and pays with the CRA, directly or through their accountant.
 

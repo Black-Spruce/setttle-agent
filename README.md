@@ -1,10 +1,10 @@
 # Setttle Agent
 
-Setttle Agent connects your AI assistant to your Setttle books. It helps you review company books, reconcile bank activity, prepare financial reports, see which CRA filings and payments are due and record the ones you've made, get a fiscal year ready for your accountant, review a Wave import before it posts, and record bookkeeping changes after you confirm them. It works with ChatGPT and Codex, Claude, and Cursor.
+Setttle Agent connects your AI assistant to your Setttle books. It helps you review company books, reconcile bank activity, prepare financial reports, draft invoices and manage recurring ones, see which CRA filings and payments are due and record the ones you've made, get a fiscal year ready for your accountant, review a Wave import before it posts, and record bookkeeping changes after you confirm them. It works with ChatGPT and Codex, Claude, and Cursor.
 
 ## What it includes
 
-- **Skills**: `setttle-bookkeeping` sets how the assistant handles your books. `review-books`, `reconcile-bank`, `record-transaction`, `prepare-report`, `track-deadlines`, `prepare-year-end`, and `review-import` cover the common workflows.
+- **Skills**: `setttle-bookkeeping` sets how the assistant handles your books. `review-books`, `reconcile-bank`, `record-transaction`, `draft-invoice`, `prepare-report`, `track-deadlines`, `prepare-year-end`, and `review-import` cover the common workflows.
 - **MCP server**: one remote server at `https://api.setttle.ca/mcp` over Streamable HTTP.
 - **Cursor rule**: `rules/setttle-bookkeeping.md` carries the same guidance for Cursor.
 
@@ -12,7 +12,7 @@ Setttle Agent connects your AI assistant to your Setttle books. It helps you rev
 
 The plugin runs no local code. It connects only to `https://api.setttle.ca/mcp`. You sign in through your assistant's OAuth flow, where you choose read-only access or permission to make changes. The plugin stores no credentials. Advanced users can use a `sett_` API token instead.
 
-The assistant sends Setttle the tool requests needed to answer you, such as listing journal entries or posting a confirmed entry, and the receipts and documents you ask it to add. Recording a payment writes a ledger entry only; Setttle never moves money. Setttle also never files a return or pays the CRA: marking a deadline filed or paid only records what you did. See the [privacy policy](https://setttle.ca/legal/privacy) and [terms](https://setttle.ca/legal/terms).
+The assistant sends Setttle the tool requests needed to answer you, such as listing journal entries or posting a confirmed entry, and the receipts and documents you ask it to add. Recording a payment writes a ledger entry only; Setttle never moves money. Invoices the assistant drafts wait for you to send them. Setttle never sends anything to customers on its own; a recurring invoice you set to auto-send keeps emailing its customer. Setttle also never files a return or pays the CRA: marking a deadline filed or paid only records what you did. See the [privacy policy](https://setttle.ca/legal/privacy) and [terms](https://setttle.ca/legal/terms).
 
 ## Install
 
@@ -34,7 +34,7 @@ claude plugin marketplace add Black-Spruce/setttle-agent
 claude plugin install setttle-agent@setttle-tools
 ```
 
-Then invoke `/setttle-agent:review-books`, `/setttle-agent:reconcile-bank`, `/setttle-agent:record-transaction`, `/setttle-agent:prepare-report`, `/setttle-agent:track-deadlines`, `/setttle-agent:prepare-year-end`, or `/setttle-agent:review-import`, and sign in to Setttle when your assistant asks.
+Then invoke `/setttle-agent:review-books`, `/setttle-agent:reconcile-bank`, `/setttle-agent:record-transaction`, `/setttle-agent:draft-invoice`, `/setttle-agent:prepare-report`, `/setttle-agent:track-deadlines`, `/setttle-agent:prepare-year-end`, or `/setttle-agent:review-import`, and sign in to Setttle when your assistant asks.
 
 Cursor loads a local plugin from `~/.cursor/plugins/local/setttle-agent`. Copy this repository there, reload the window, and confirm the skills, rule, and MCP server appear.
 
