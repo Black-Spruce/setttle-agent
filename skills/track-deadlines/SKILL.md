@@ -12,6 +12,7 @@ Help the owner keep the deadlines Setttle calculates from their company profile 
 - Confirm the company. Call `list_deadlines` and find the deadline the owner means by its label and period. If more than one fits, ask. Use its `key` in every later call.
 - Say where it stands: due date, status, what it needs (filing, payment), and anything already recorded (`filedOn`, `paidOn`, `paidAmountMinor`). For a GST/HST return, give line 109; if `booksReadyForPeriod` is false, say the books are only caught up through `booksCaughtUpThrough`, so the lines may change.
 - Unanswered `questions` are answered by the owner on the Deadlines page in the web app. Don't answer them here.
+- A shareholder loan repayment deadline (kind shareholder_loan_repayment) is the date a shareholder must repay money they owed the corporation at a fiscal year end. Nothing is recorded for it: it clears when the books show the loan repaid, so point the owner to recording the repayment instead of calling `set_deadline_status`. Give the shareholder, `owedAtYearEndMinor`, and `owingMinor`. If its status is repaid_late, say it was repaid after the due date and the owner should check with their accountant. Whether a repayment counts is for the accountant, not for you to decide.
 
 ## Record a filing
 
